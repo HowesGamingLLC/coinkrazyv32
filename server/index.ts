@@ -8,6 +8,7 @@ import initAdminRoutes from "./routes/init-admin";
 import seedRoutes from "./routes/seed";
 import paymentRoutes from "./routes/payments";
 import squareRoutes from "./routes/square";
+import gameRoutes from "./routes/games";
 
 export function createServer() {
   const app = express();
