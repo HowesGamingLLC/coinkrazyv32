@@ -809,17 +809,20 @@ const App = () => {
             <McLuckTopBar />
             <div style={{ flex: 1, overflow: "auto" }}>
               <Routes>
-                <Route path="/" element={<MainContent />} />
-                <Route path="/slots" element={<MainContent />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/shop" element={<CoinStore />} />
+                <Route path="/games" element={<GameLobby />} />
+                <Route path="/game/:gameId" element={<GamePlay />} />
+                <Route path="/" element={<GameLobby />} />
+                <Route path="/slots" element={<GameLobby />} />
                 <Route path="/table-games" element={<MainContent />} />
                 <Route path="/live-games" element={<MainContent />} />
                 <Route path="/promotions" element={<MainContent />} />
                 <Route path="/loyalty" element={<MainContent />} />
-                <Route path="/shop" element={<MainContent />} />
                 <Route path="/prizes" element={<MainContent />} />
                 <Route path="/account" element={<MainContent />} />
                 <Route path="/help" element={<MainContent />} />
-                <Route path="*" element={<MainContent />} />
+                <Route path="*" element={<GameLobby />} />
               </Routes>
             </div>
             <BottomBar />
