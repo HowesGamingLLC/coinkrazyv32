@@ -72,33 +72,7 @@
   <body>
     <div id="root"></div>
 
-    <!-- Cache-busting script load with timestamp -->
-    <script type="module" src="/client/App.tsx?v=1734525008394"></script>
-
-    <!-- Clear any cached modules on load -->
-    <script>
-      // Force clear browser cache for this session
-      console.log('🧹 Clearing browser module cache...');
-      
-      // Clear any service worker cache
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for(let registration of registrations) {
-            registration.unregister();
-          }
-        });
-      }
-      
-      // Clear any cached data
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          for (let name of names) {
-            caches.delete(name);
-          }
-        });
-      }
-      
-      console.log('✅ Cache cleared, loading fresh app...');
-    </script>
+    <!-- App entry point -->
+    <script type="module" src="/client/main.tsx"></script>
   </body>
 </html>
