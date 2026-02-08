@@ -40,5 +40,8 @@ export function createServer() {
   // Payment processing routes
   app.use("/api/payments", paymentRoutes);
 
+  // Square payment routes
+  app.use("/api/square", squareRoutes);
+
   return app;
 }
