@@ -44,5 +44,8 @@ export function createServer() {
   // Square payment routes
   app.use("/api/square", squareRoutes);
 
+  // Game routes
+  app.use("/api/games", gameRoutes);
+
   return app;
 }
