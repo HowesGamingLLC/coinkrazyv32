@@ -812,6 +812,7 @@ const App = () => {
               <Routes>
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/shop" element={<CoinStore />} />
+                <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/games" element={<GameLobby />} />
                 <Route path="/game/:gameId" element={<GamePlay />} />
                 <Route path="/" element={<GameLobby />} />
