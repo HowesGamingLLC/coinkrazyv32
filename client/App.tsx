@@ -826,19 +826,4 @@ const App = () => {
   );
 };
 
-// Initialize CoinKrazy.com application
-const container = document.getElementById("root");
-if (!container) throw new Error("Root container not found");
-
-const root = ReactDOM.createRoot(container);
-root.render(<App />);
-
-console.log("✅ CoinKrazy.com initialized - " + new Date().toISOString());
-
-// HMR support
-if (import.meta.hot) {
-  import.meta.hot.accept(() => {
-    console.log("🔄 HMR update - " + new Date().toISOString());
-    root.render(<App />);
-  });
-}
+export default App;
