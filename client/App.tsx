@@ -7,7 +7,12 @@ import {
   Route,
   useLocation,
   useNavigate,
+  Navigate,
 } from "react-router-dom";
+import Auth from "./pages/Auth";
+import CoinStore from "./pages/CoinStore";
+import GameLobby from "./pages/GameLobby";
+import GamePlay from "./pages/GamePlay";
 
 // Error Boundary to catch any React errors
 class ErrorBoundary extends React.Component<
