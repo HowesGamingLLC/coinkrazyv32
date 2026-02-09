@@ -6,24 +6,42 @@ const router = express.Router();
 // Initialize admin user endpoint
 router.post("/init-admin", async (req, res) => {
   try {
-    const adminEmail = "coinkrazy26@gmail.com";
-    const adminPassword = "admin123";
+    // Use the correct admin credentials from seed data
+    const adminEmail = "coinkrazy00@gmail.com";
+    const adminPassword = "Woot6969!";
 
     // Check if admin already exists
-    const existingAdmin = await databaseService.getUserByEmail(adminEmail);
+    let existingAdmin = await databaseService.getUserByEmail(adminEmail);
+
+    if (!existingAdmin) {
+      // Check if admin username exists
+      existingAdmin = await databaseService.getUserByUsername("admin");
+    }
+
     if (existingAdmin) {
+      // Update existing admin to ensure it's verified and active
+      await databaseService.query(
+        `UPDATE users
+         SET role = 'admin',
+             is_email_verified = TRUE,
+             email_verification_token = NULL,
+             status = 'active'
+         WHERE id = $1`,
+        [existingAdmin.id],
+      );
+
       return res.json({
         success: true,
-        message: "Admin user already exists",
+        message: "Admin user verified",
         user: {
           email: existingAdmin.email,
           username: existingAdmin.username,
-          role: existingAdmin.role,
+          role: "admin",
         },
       });
     }
 
-    // Create admin user
+    // Create admin user if it doesn't exist
     const bcrypt = await import("bcryptjs");
     const passwordHash = await bcrypt.default.hash(adminPassword, 12);
 
@@ -37,9 +55,9 @@ router.post("/init-admin", async (req, res) => {
 
     // Update user to admin role and verify email
     await databaseService.query(
-      `UPDATE users 
-       SET role = 'admin', 
-           is_email_verified = TRUE, 
+      `UPDATE users
+       SET role = 'admin',
+           is_email_verified = TRUE,
            email_verification_token = NULL,
            status = 'active'
        WHERE id = $1`,
