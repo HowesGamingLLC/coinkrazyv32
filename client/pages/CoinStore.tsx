@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { loadSquareWebPayments } from "@square/web-payments-sdk";
 
 interface Package {
   id: string;
