@@ -158,7 +158,7 @@ export class SportsParleyService {
     // Add parlay legs
     for (const leg of legs) {
       const legId = `leg_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-      await this.pool.query(
+      await databaseService.query(
         `
         INSERT INTO parlay_legs (leg_id, parlay_id, event_id, pick, bet_type, odds)
         VALUES ($1, $2, $3, $4, $5, $6)
@@ -311,7 +311,7 @@ export class SportsParleyService {
         parlay_status = allLegsWon ? "won" : "lost";
 
         // Update parlay status
-        await this.pool.query(
+        await databaseService.query(
           `
           UPDATE sports_parlays 
           SET status = $2
@@ -322,7 +322,7 @@ export class SportsParleyService {
 
         // If won, add payout to balance
         if (parlay_status === "won") {
-          await this.pool.query(
+          await databaseService.query(
             `
             UPDATE user_balances 
             SET sweeps_coins = sweeps_coins + $2
@@ -332,7 +332,7 @@ export class SportsParleyService {
           );
 
           // Log transaction
-          await this.pool.query(
+          await databaseService.query(
             `
             INSERT INTO transactions (user_id, transaction_type, currency, amount, description, status)
             VALUES ($1, 'win', 'SC', $2, $3, 'completed')
