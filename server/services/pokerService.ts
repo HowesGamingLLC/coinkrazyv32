@@ -40,16 +40,13 @@ export interface PokerHand {
 
 export class PokerService {
   private static instance: PokerService;
-  private pool: Pool;
   private activeTables: Map<string, PokerTable> = new Map();
 
-  private constructor(pool: Pool) {
-    this.pool = pool;
-  }
+  private constructor() {}
 
-  static getInstance(pool: Pool): PokerService {
+  static getInstance(): PokerService {
     if (!PokerService.instance) {
-      PokerService.instance = new PokerService(pool);
+      PokerService.instance = new PokerService();
     }
     return PokerService.instance;
   }
