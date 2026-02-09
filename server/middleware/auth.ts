@@ -117,3 +117,6 @@ export const validateUserAccess = (
     next();
   });
 };
+
+// Alias for authenticateToken for convenience
+export const verifyToken = authenticateToken;
