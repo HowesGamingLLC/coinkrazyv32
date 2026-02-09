@@ -816,6 +816,7 @@ const App = () => {
                 <Route path="/account" element={<PlayerDashboard />} />
                 <Route path="/shop" element={<CoinStore />} />
                 <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/bonus" element={<BonusFeatures />} />
                 <Route path="/games" element={<GameLobby />} />
                 <Route path="/game/:gameId" element={<GamePlay />} />
                 <Route path="/" element={<GameLobby />} />
