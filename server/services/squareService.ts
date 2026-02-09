@@ -183,7 +183,7 @@ class SquareService {
 
       return {
         orderId,
-        paymentId: payment.id || "",
+        paymentId,
         amount: pkg.priceUsd,
       };
     } catch (error) {
