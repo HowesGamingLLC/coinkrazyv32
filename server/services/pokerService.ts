@@ -388,7 +388,7 @@ export class PokerService {
   // Get table history
   async getTableHistory(tableId: string, limit: number = 50) {
     const query = `
-      SELECT 
+      SELECT
         ph.*,
         u.username as winner_username
       FROM poker_hands ph
@@ -398,7 +398,10 @@ export class PokerService {
       LIMIT $2
     `;
 
-    const result = await this.pool.query(query, [tableId, limit]);
+    const result = await databaseService.query(query, [tableId, limit]);
     return result.rows;
   }
 }
+
+export const pokerService = PokerService.getInstance();
+export default pokerService;
