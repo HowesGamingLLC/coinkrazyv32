@@ -122,7 +122,7 @@ export class SportsParleyService {
     const balanceQuery = `
       SELECT sweeps_coins FROM user_balances WHERE user_id = $1
     `;
-    const balanceResult = await this.pool.query(balanceQuery, [userId]);
+    const balanceResult = await databaseService.query(balanceQuery, [userId]);
     if (!balanceResult.rows[0] || balanceResult.rows[0].sweeps_coins < totalWager) {
       throw new Error("Insufficient balance for parlay wager");
     }
