@@ -41,9 +41,9 @@ export const CoinStore = () => {
 
     const initializeCard = async () => {
       try {
-        const cardElement = await web.payments(
-          process.env.VITE_PUBLIC_SQUARE_APPLICATION_ID || ""
-        ).card();
+        const cardElement = await web
+          .payments(process.env.VITE_PUBLIC_SQUARE_APPLICATION_ID || "")
+          .card();
         await cardElement.attach("#card-container");
         setCard(cardElement);
       } catch (error) {
@@ -111,7 +111,7 @@ export const CoinStore = () => {
       if (data.success) {
         // Payment successful
         alert(
-          `Success! You purchased ${data.coinsAwarded} coins for $${data.amount.toFixed(2)}`
+          `Success! You purchased ${data.coinsAwarded} coins for $${data.amount.toFixed(2)}`,
         );
         setSelectedPackage(null);
         // Refresh user balance in parent
@@ -380,10 +380,12 @@ export const CoinStore = () => {
                 marginBottom: "1rem",
               }}
               onMouseEnter={(e) => {
-                if (!processing) e.currentTarget.style.backgroundColor = "#ffed4e";
+                if (!processing)
+                  e.currentTarget.style.backgroundColor = "#ffed4e";
               }}
               onMouseLeave={(e) => {
-                if (!processing) e.currentTarget.style.backgroundColor = "#ffd700";
+                if (!processing)
+                  e.currentTarget.style.backgroundColor = "#ffd700";
               }}
             >
               {processing

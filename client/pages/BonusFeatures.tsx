@@ -93,7 +93,13 @@ export const BonusFeatures = () => {
           }}
         >
           {(
-            ["leaderboards", "vip", "tournaments", "affiliates", "social"] as const
+            [
+              "leaderboards",
+              "vip",
+              "tournaments",
+              "affiliates",
+              "social",
+            ] as const
           ).map((tab) => (
             <button
               key={tab}
@@ -220,10 +226,10 @@ export const BonusFeatures = () => {
                                 entry.rank === 1
                                   ? "#ffd700"
                                   : entry.rank === 2
-                                  ? "#c0c0c0"
-                                  : entry.rank === 3
-                                  ? "#cd7f32"
-                                  : "#f0f6fc",
+                                    ? "#c0c0c0"
+                                    : entry.rank === 3
+                                      ? "#cd7f32"
+                                      : "#f0f6fc",
                               fontWeight: "bold",
                             }}
                           >
@@ -343,12 +349,8 @@ export const BonusFeatures = () => {
                         paddingLeft: "1.5rem",
                       }}
                     >
-                      <li>
-                        {data.tier.benefits.depositBonus}% Deposit Bonus
-                      </li>
-                      <li>
-                        {data.tier.benefits.cashbackRate}% Cashback Rate
-                      </li>
+                      <li>{data.tier.benefits.depositBonus}% Deposit Bonus</li>
+                      <li>{data.tier.benefits.cashbackRate}% Cashback Rate</li>
                       <li>
                         {data.tier.benefits.spinMultiplier}x Spin Multiplier
                       </li>
@@ -427,7 +429,8 @@ export const BonusFeatures = () => {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                    gridTemplateColumns:
+                      "repeat(auto-fill, minmax(300px, 1fr))",
                     gap: "1.5rem",
                   }}
                 >
@@ -469,7 +472,8 @@ export const BonusFeatures = () => {
                           marginBottom: "1rem",
                         }}
                       >
-                        Prize Pool: ${tournament.totalPrizePool.toLocaleString()}
+                        Prize Pool: $
+                        {tournament.totalPrizePool.toLocaleString()}
                       </div>
                       <button
                         style={{
@@ -661,7 +665,8 @@ export const BonusFeatures = () => {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+                    gridTemplateColumns:
+                      "repeat(auto-fill, minmax(250px, 1fr))",
                     gap: "1.5rem",
                   }}
                 >

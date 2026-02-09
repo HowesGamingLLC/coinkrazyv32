@@ -1,7 +1,7 @@
-import express, { RequestHandler } from 'express';
-import { authenticateToken } from '../middleware/auth';
-import slotsService from '../services/slotsService';
-import databaseService from '../services/database';
+import express, { RequestHandler } from "express";
+import { authenticateToken } from "../middleware/auth";
+import slotsService from "../services/slotsService";
+import databaseService from "../services/database";
 
 const router = express.Router();
 
@@ -17,10 +17,10 @@ const getAllGames: RequestHandler = async (_req, res) => {
       games,
     });
   } catch (error) {
-    console.error('Error fetching games:', error);
+    console.error("Error fetching games:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch games',
+      error: "Failed to fetch games",
     });
   }
 };
@@ -37,10 +37,10 @@ const getFeaturedGames: RequestHandler = async (_req, res) => {
       games,
     });
   } catch (error) {
-    console.error('Error fetching featured games:', error);
+    console.error("Error fetching featured games:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch featured games',
+      error: "Failed to fetch featured games",
     });
   }
 };
@@ -57,7 +57,7 @@ const getGameById: RequestHandler = async (req, res) => {
     if (!game) {
       return res.status(404).json({
         success: false,
-        error: 'Game not found',
+        error: "Game not found",
       });
     }
 
@@ -66,10 +66,10 @@ const getGameById: RequestHandler = async (req, res) => {
       game,
     });
   } catch (error) {
-    console.error('Error fetching game:', error);
+    console.error("Error fetching game:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch game',
+      error: "Failed to fetch game",
     });
   }
 };
@@ -88,10 +88,10 @@ const getGamesByCategory: RequestHandler = async (req, res) => {
       games,
     });
   } catch (error) {
-    console.error('Error fetching games by category:', error);
+    console.error("Error fetching games by category:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch games',
+      error: "Failed to fetch games",
     });
   }
 };
@@ -105,12 +105,12 @@ const playSpin: RequestHandler = async (req, res) => {
   try {
     const user = (req as any).user;
     const { gameId } = req.params;
-    const { betAmount, currency = 'GC' } = req.body;
+    const { betAmount, currency = "GC" } = req.body;
 
-    if (!betAmount || !['GC', 'SC'].includes(currency)) {
+    if (!betAmount || !["GC", "SC"].includes(currency)) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid bet amount or currency',
+        error: "Invalid bet amount or currency",
       });
     }
 
@@ -134,10 +134,10 @@ const playSpin: RequestHandler = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Spin error:', error);
+    console.error("Spin error:", error);
     res.status(400).json({
       success: false,
-      error: error instanceof Error ? error.message : 'Spin failed',
+      error: error instanceof Error ? error.message : "Spin failed",
     });
   }
 };
@@ -157,10 +157,10 @@ const getGameStats: RequestHandler = async (req, res) => {
       stats,
     });
   } catch (error) {
-    console.error('Error fetching game stats:', error);
+    console.error("Error fetching game stats:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch game stats',
+      error: "Failed to fetch game stats",
     });
   }
 };
@@ -193,10 +193,10 @@ const getSpinHistory: RequestHandler = async (req, res) => {
       spins: result.rows,
     });
   } catch (error) {
-    console.error('Error fetching spin history:', error);
+    console.error("Error fetching spin history:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch spin history',
+      error: "Failed to fetch spin history",
     });
   }
 };
@@ -209,10 +209,10 @@ const getGlobalStats: RequestHandler = async (req, res) => {
   try {
     const user = (req as any).user;
 
-    if (user.role !== 'admin') {
+    if (user.role !== "admin") {
       return res.status(403).json({
         success: false,
-        error: 'Unauthorized',
+        error: "Unauthorized",
       });
     }
 
@@ -234,22 +234,22 @@ const getGlobalStats: RequestHandler = async (req, res) => {
       stats: stats.rows[0],
     });
   } catch (error) {
-    console.error('Error fetching global stats:', error);
+    console.error("Error fetching global stats:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch stats',
+      error: "Failed to fetch stats",
     });
   }
 };
 
 // Routes
-router.get('/', getAllGames);
-router.get('/featured', getFeaturedGames);
-router.get('/category/:category', getGamesByCategory);
-router.get('/:gameId', getGameById);
-router.get('/:gameId/stats', getGameStats);
-router.post('/:gameId/spin', authenticateToken, playSpin);
-router.get('/user/history', authenticateToken, getSpinHistory);
-router.get('/admin/stats', authenticateToken, getGlobalStats);
+router.get("/", getAllGames);
+router.get("/featured", getFeaturedGames);
+router.get("/category/:category", getGamesByCategory);
+router.get("/:gameId", getGameById);
+router.get("/:gameId/stats", getGameStats);
+router.post("/:gameId/spin", authenticateToken, playSpin);
+router.get("/user/history", authenticateToken, getSpinHistory);
+router.get("/admin/stats", authenticateToken, getGlobalStats);
 
 export default router;

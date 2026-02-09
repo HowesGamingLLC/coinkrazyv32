@@ -97,7 +97,11 @@ export const PlayerDashboard = () => {
   };
 
   const handleSelfExclude = async () => {
-    if (!window.confirm("Are you sure? This will disable your account for 30 days.")) {
+    if (
+      !window.confirm(
+        "Are you sure? This will disable your account for 30 days.",
+      )
+    ) {
       return;
     }
 
@@ -336,7 +340,9 @@ export const PlayerDashboard = () => {
             borderBottom: "1px solid #30363d",
           }}
         >
-          {(["overview", "history", "settings", "responsible-gaming"] as const).map((tab) => (
+          {(
+            ["overview", "history", "settings", "responsible-gaming"] as const
+          ).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -532,13 +538,13 @@ export const PlayerDashboard = () => {
                         style={{
                           padding: "1rem",
                           textAlign: "right",
-                          color:
-                            transaction.amount > 0 ? "#4ade80" : "#ff6b6b",
+                          color: transaction.amount > 0 ? "#4ade80" : "#ff6b6b",
                           fontWeight: "600",
                         }}
                       >
                         {transaction.amount > 0 ? "+" : ""}
-                        {transaction.amount.toLocaleString()} {transaction.currency}
+                        {transaction.amount.toLocaleString()}{" "}
+                        {transaction.currency}
                       </td>
                     </tr>
                   ))}

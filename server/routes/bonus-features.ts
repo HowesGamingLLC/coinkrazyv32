@@ -1,10 +1,10 @@
-import express, { RequestHandler } from 'express';
-import { authenticateToken } from '../middleware/auth';
-import leaderboardService from '../services/leaderboardService';
-import vipService from '../services/vipService';
-import tournamentService from '../services/tournamentService';
-import affiliateService from '../services/affiliateService';
-import socialService from '../services/socialService';
+import express, { RequestHandler } from "express";
+import { authenticateToken } from "../middleware/auth";
+import leaderboardService from "../services/leaderboardService";
+import vipService from "../services/vipService";
+import tournamentService from "../services/tournamentService";
+import affiliateService from "../services/affiliateService";
+import socialService from "../services/socialService";
 
 const router = express.Router();
 
@@ -19,7 +19,9 @@ const getDailyLeaderboard: RequestHandler = async (req, res) => {
     const leaderboard = await leaderboardService.getDailyLeaderboard(limit);
     res.json({ success: true, leaderboard });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch leaderboard' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch leaderboard" });
   }
 };
 
@@ -32,7 +34,9 @@ const getWeeklyLeaderboard: RequestHandler = async (req, res) => {
     const leaderboard = await leaderboardService.getWeeklyLeaderboard(limit);
     res.json({ success: true, leaderboard });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch leaderboard' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch leaderboard" });
   }
 };
 
@@ -45,7 +49,9 @@ const getAllTimeLeaderboard: RequestHandler = async (req, res) => {
     const leaderboard = await leaderboardService.getAllTimeLeaderboard(limit);
     res.json({ success: true, leaderboard });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch leaderboard' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch leaderboard" });
   }
 };
 
@@ -58,7 +64,9 @@ const getUserRank: RequestHandler = async (req, res) => {
     const rank = await leaderboardService.getUserRank(user.id);
     res.json({ success: true, rank });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch user rank' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch user rank" });
   }
 };
 
@@ -73,7 +81,9 @@ const getVIPStatus: RequestHandler = async (req, res) => {
     const status = await vipService.getUserVIPStatus(user.id);
     res.json({ success: true, status });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch VIP status' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch VIP status" });
   }
 };
 
@@ -85,7 +95,9 @@ const getVIPTiers: RequestHandler = (req, res) => {
     const tiers = vipService.getTiers();
     res.json({ success: true, tiers });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch VIP tiers' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch VIP tiers" });
   }
 };
 
@@ -97,15 +109,19 @@ const redeemVIPPoints: RequestHandler = async (req, res) => {
     const user = (req as any).user;
     const { points, rewardType } = req.body;
 
-    const success = await vipService.redeemVIPPoints(user.id, points, rewardType);
+    const success = await vipService.redeemVIPPoints(
+      user.id,
+      points,
+      rewardType,
+    );
 
     if (success) {
-      res.json({ success: true, message: 'Points redeemed successfully' });
+      res.json({ success: true, message: "Points redeemed successfully" });
     } else {
-      res.status(400).json({ success: false, message: 'Redemption failed' });
+      res.status(400).json({ success: false, message: "Redemption failed" });
     }
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Redemption failed' });
+    res.status(500).json({ success: false, error: "Redemption failed" });
   }
 };
 
@@ -119,7 +135,9 @@ const getTournaments: RequestHandler = async (req, res) => {
     const tournaments = await tournamentService.getActiveTournaments();
     res.json({ success: true, tournaments });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch tournaments' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch tournaments" });
   }
 };
 
@@ -129,15 +147,20 @@ const getTournaments: RequestHandler = async (req, res) => {
 const getTournamentDetails: RequestHandler = async (req, res) => {
   try {
     const { tournamentId } = req.params;
-    const tournament = await tournamentService.getTournamentDetails(tournamentId);
+    const tournament =
+      await tournamentService.getTournamentDetails(tournamentId);
 
     if (!tournament) {
-      return res.status(404).json({ success: false, error: 'Tournament not found' });
+      return res
+        .status(404)
+        .json({ success: false, error: "Tournament not found" });
     }
 
     res.json({ success: true, tournament });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch tournament' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch tournament" });
   }
 };
 
@@ -148,11 +171,16 @@ const joinTournament: RequestHandler = async (req, res) => {
   try {
     const user = (req as any).user;
     const { tournamentId } = req.params;
-    const result = await tournamentService.joinTournament(user.id, tournamentId);
+    const result = await tournamentService.joinTournament(
+      user.id,
+      tournamentId,
+    );
 
     res.json(result);
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to join tournament' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to join tournament" });
   }
 };
 
@@ -162,11 +190,14 @@ const joinTournament: RequestHandler = async (req, res) => {
 const getTournamentLeaderboard: RequestHandler = async (req, res) => {
   try {
     const { tournamentId } = req.params;
-    const leaderboard = await tournamentService.getTournamentLeaderboard(tournamentId);
+    const leaderboard =
+      await tournamentService.getTournamentLeaderboard(tournamentId);
 
     res.json({ success: true, leaderboard });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch leaderboard' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch leaderboard" });
   }
 };
 
@@ -182,7 +213,7 @@ const getAffiliateCode: RequestHandler = async (req, res) => {
 
     res.json({ success: true, code });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to generate code' });
+    res.status(500).json({ success: false, error: "Failed to generate code" });
   }
 };
 
@@ -196,7 +227,7 @@ const getAffiliateProfile: RequestHandler = async (req, res) => {
 
     res.json({ success: true, profile });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch profile' });
+    res.status(500).json({ success: false, error: "Failed to fetch profile" });
   }
 };
 
@@ -208,7 +239,7 @@ const getAffiliateTiers: RequestHandler = (req, res) => {
     const tiers = affiliateService.getTiers();
     res.json({ success: true, tiers });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch tiers' });
+    res.status(500).json({ success: false, error: "Failed to fetch tiers" });
   }
 };
 
@@ -224,7 +255,7 @@ const withdrawAffiliateEarnings: RequestHandler = async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Withdrawal failed' });
+    res.status(500).json({ success: false, error: "Withdrawal failed" });
   }
 };
 
@@ -238,7 +269,9 @@ const getAffiliateReferrals: RequestHandler = async (req, res) => {
 
     res.json({ success: true, referrals });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch referrals' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch referrals" });
   }
 };
 
@@ -255,12 +288,12 @@ const sendMessage: RequestHandler = async (req, res) => {
     const success = await socialService.sendMessage(user.id, toUserId, content);
 
     if (success) {
-      res.json({ success: true, message: 'Message sent' });
+      res.json({ success: true, message: "Message sent" });
     } else {
-      res.status(400).json({ success: false, error: 'Failed to send message' });
+      res.status(400).json({ success: false, error: "Failed to send message" });
     }
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to send message' });
+    res.status(500).json({ success: false, error: "Failed to send message" });
   }
 };
 
@@ -275,7 +308,7 @@ const getMessages: RequestHandler = async (req, res) => {
 
     res.json({ success: true, messages });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch messages' });
+    res.status(500).json({ success: false, error: "Failed to fetch messages" });
   }
 };
 
@@ -290,12 +323,12 @@ const addFriend: RequestHandler = async (req, res) => {
     const success = await socialService.addFriend(user.id, friendId);
 
     if (success) {
-      res.json({ success: true, message: 'Friend added' });
+      res.json({ success: true, message: "Friend added" });
     } else {
-      res.status(400).json({ success: false, error: 'Already friends' });
+      res.status(400).json({ success: false, error: "Already friends" });
     }
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to add friend' });
+    res.status(500).json({ success: false, error: "Failed to add friend" });
   }
 };
 
@@ -309,7 +342,7 @@ const getFriends: RequestHandler = async (req, res) => {
 
     res.json({ success: true, friends });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch friends' });
+    res.status(500).json({ success: false, error: "Failed to fetch friends" });
   }
 };
 
@@ -326,12 +359,12 @@ const createGuild: RequestHandler = async (req, res) => {
       name,
       description,
       icon,
-      isPublic
+      isPublic,
     );
 
     res.json({ success: true, guildId });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to create guild' });
+    res.status(500).json({ success: false, error: "Failed to create guild" });
   }
 };
 
@@ -346,12 +379,12 @@ const joinGuild: RequestHandler = async (req, res) => {
     const success = await socialService.joinGuild(user.id, guildId);
 
     if (success) {
-      res.json({ success: true, message: 'Guild joined' });
+      res.json({ success: true, message: "Guild joined" });
     } else {
-      res.status(400).json({ success: false, error: 'Already member' });
+      res.status(400).json({ success: false, error: "Already member" });
     }
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to join guild' });
+    res.status(500).json({ success: false, error: "Failed to join guild" });
   }
 };
 
@@ -365,7 +398,7 @@ const getGuilds: RequestHandler = async (req, res) => {
 
     res.json({ success: true, guilds });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch guilds' });
+    res.status(500).json({ success: false, error: "Failed to fetch guilds" });
   }
 };
 
@@ -379,7 +412,7 @@ const getGuildMembers: RequestHandler = async (req, res) => {
 
     res.json({ success: true, members });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch members' });
+    res.status(500).json({ success: false, error: "Failed to fetch members" });
   }
 };
 
@@ -393,39 +426,49 @@ const getGuildLeaderboard: RequestHandler = async (req, res) => {
 
     res.json({ success: true, leaderboard });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch leaderboard' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch leaderboard" });
   }
 };
 
 // Register routes
-router.get('/leaderboards/daily', getDailyLeaderboard);
-router.get('/leaderboards/weekly', getWeeklyLeaderboard);
-router.get('/leaderboards/all-time', getAllTimeLeaderboard);
-router.get('/leaderboards/user-rank', authenticateToken, getUserRank);
+router.get("/leaderboards/daily", getDailyLeaderboard);
+router.get("/leaderboards/weekly", getWeeklyLeaderboard);
+router.get("/leaderboards/all-time", getAllTimeLeaderboard);
+router.get("/leaderboards/user-rank", authenticateToken, getUserRank);
 
-router.get('/vip/status', authenticateToken, getVIPStatus);
-router.get('/vip/tiers', getVIPTiers);
-router.post('/vip/redeem-points', authenticateToken, redeemVIPPoints);
+router.get("/vip/status", authenticateToken, getVIPStatus);
+router.get("/vip/tiers", getVIPTiers);
+router.post("/vip/redeem-points", authenticateToken, redeemVIPPoints);
 
-router.get('/tournaments', getTournaments);
-router.get('/tournaments/:tournamentId', getTournamentDetails);
-router.post('/tournaments/:tournamentId/join', authenticateToken, joinTournament);
-router.get('/tournaments/:tournamentId/leaderboard', getTournamentLeaderboard);
+router.get("/tournaments", getTournaments);
+router.get("/tournaments/:tournamentId", getTournamentDetails);
+router.post(
+  "/tournaments/:tournamentId/join",
+  authenticateToken,
+  joinTournament,
+);
+router.get("/tournaments/:tournamentId/leaderboard", getTournamentLeaderboard);
 
-router.get('/affiliate/code', authenticateToken, getAffiliateCode);
-router.get('/affiliate/profile', authenticateToken, getAffiliateProfile);
-router.get('/affiliate/tiers', getAffiliateTiers);
-router.post('/affiliate/withdraw', authenticateToken, withdrawAffiliateEarnings);
-router.get('/affiliate/referrals', authenticateToken, getAffiliateReferrals);
+router.get("/affiliate/code", authenticateToken, getAffiliateCode);
+router.get("/affiliate/profile", authenticateToken, getAffiliateProfile);
+router.get("/affiliate/tiers", getAffiliateTiers);
+router.post(
+  "/affiliate/withdraw",
+  authenticateToken,
+  withdrawAffiliateEarnings,
+);
+router.get("/affiliate/referrals", authenticateToken, getAffiliateReferrals);
 
-router.post('/social/message', authenticateToken, sendMessage);
-router.get('/social/messages', authenticateToken, getMessages);
-router.post('/social/friends/add', authenticateToken, addFriend);
-router.get('/social/friends', authenticateToken, getFriends);
-router.post('/social/guild/create', authenticateToken, createGuild);
-router.post('/social/guild/:guildId/join', authenticateToken, joinGuild);
-router.get('/social/guilds', getGuilds);
-router.get('/social/guilds/:guildId/members', getGuildMembers);
-router.get('/social/guilds/:guildId/leaderboard', getGuildLeaderboard);
+router.post("/social/message", authenticateToken, sendMessage);
+router.get("/social/messages", authenticateToken, getMessages);
+router.post("/social/friends/add", authenticateToken, addFriend);
+router.get("/social/friends", authenticateToken, getFriends);
+router.post("/social/guild/create", authenticateToken, createGuild);
+router.post("/social/guild/:guildId/join", authenticateToken, joinGuild);
+router.get("/social/guilds", getGuilds);
+router.get("/social/guilds/:guildId/members", getGuildMembers);
+router.get("/social/guilds/:guildId/leaderboard", getGuildLeaderboard);
 
 export default router;

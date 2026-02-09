@@ -1,15 +1,18 @@
-import { Client, Environment } from 'square';
-import { databaseService } from './database';
+import { Client, Environment } from "square";
+import { databaseService } from "./database";
 
 // Square SDK configuration
-const SQUARE_ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN || 'sq_test_';
-const SQUARE_LOCATION_ID = process.env.SQUARE_LOCATION_ID || '';
-const SQUARE_APP_ID = process.env.SQUARE_APP_ID || '';
+const SQUARE_ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN || "sq_test_";
+const SQUARE_LOCATION_ID = process.env.SQUARE_LOCATION_ID || "";
+const SQUARE_APP_ID = process.env.SQUARE_APP_ID || "";
 
 const client = new Client({
   accessToken: SQUARE_ACCESS_TOKEN,
-  environment: process.env.NODE_ENV === 'production' ? Environment.Production : Environment.Sandbox,
-  userAgentDetail: 'CoinKrazy/1.0',
+  environment:
+    process.env.NODE_ENV === "production"
+      ? Environment.Production
+      : Environment.Sandbox,
+  userAgentDetail: "CoinKrazy/1.0",
 });
 
 const paymentsApi = client.paymentsApi;
@@ -44,44 +47,44 @@ interface CreatePaymentRequest {
 class SquareService {
   private coinPackages: CoinPackage[] = [
     {
-      id: 'pkg_100gc',
-      name: '100 Gold Coins',
+      id: "pkg_100gc",
+      name: "100 Gold Coins",
       goldCoins: 100,
       bonusCoins: 20,
       priceUsd: 4.99,
-      description: '100 Gold Coins + 20 Bonus',
+      description: "100 Gold Coins + 20 Bonus",
     },
     {
-      id: 'pkg_500gc',
-      name: '500 Gold Coins',
+      id: "pkg_500gc",
+      name: "500 Gold Coins",
       goldCoins: 500,
       bonusCoins: 150,
       priceUsd: 19.99,
-      description: '500 Gold Coins + 150 Bonus',
+      description: "500 Gold Coins + 150 Bonus",
     },
     {
-      id: 'pkg_1000gc',
-      name: '1000 Gold Coins',
+      id: "pkg_1000gc",
+      name: "1000 Gold Coins",
       goldCoins: 1000,
       bonusCoins: 400,
       priceUsd: 34.99,
-      description: '1000 Gold Coins + 400 Bonus',
+      description: "1000 Gold Coins + 400 Bonus",
     },
     {
-      id: 'pkg_2500gc',
-      name: '2500 Gold Coins',
+      id: "pkg_2500gc",
+      name: "2500 Gold Coins",
       goldCoins: 2500,
       bonusCoins: 1250,
       priceUsd: 74.99,
-      description: '2500 Gold Coins + 1250 Bonus',
+      description: "2500 Gold Coins + 1250 Bonus",
     },
     {
-      id: 'pkg_5000gc',
-      name: '5000 Gold Coins',
+      id: "pkg_5000gc",
+      name: "5000 Gold Coins",
       goldCoins: 5000,
       bonusCoins: 3000,
       priceUsd: 129.99,
-      description: '5000 Gold Coins + 3000 Bonus (BEST VALUE)',
+      description: "5000 Gold Coins + 3000 Bonus (BEST VALUE)",
     },
   ];
 
@@ -110,7 +113,7 @@ class SquareService {
     try {
       const pkg = this.getPackageById(packageId);
       if (!pkg) {
-        throw new Error('Package not found');
+        throw new Error("Package not found");
       }
 
       // Create order record in database
@@ -123,7 +126,7 @@ class SquareService {
         idempotencyKey: `${orderId}_${Date.now()}`,
         amountMoney: {
           amount: amountInCents,
-          currency: 'USD',
+          currency: "USD",
         },
         autocomplete: true,
         note: `${pkg.name} - ${pkg.goldCoins} Gold Coins`,
@@ -131,7 +134,7 @@ class SquareService {
       });
 
       if (!response.result.payment) {
-        throw new Error('Payment creation failed');
+        throw new Error("Payment creation failed");
       }
 
       const payment = response.result.payment;
@@ -148,8 +151,8 @@ class SquareService {
           pkg.priceUsd,
           pkg.goldCoins,
           pkg.bonusCoins,
-          'square',
-          'completed',
+          "square",
+          "completed",
           payment.id,
         ],
       );
@@ -168,22 +171,22 @@ class SquareService {
          VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
         [
           userId,
-          'purchase',
-          'GC',
+          "purchase",
+          "GC",
           (pkg.goldCoins + pkg.bonusCoins) * 1000,
           `Purchase: ${pkg.name}`,
           orderId,
-          'completed',
+          "completed",
         ],
       );
 
       return {
         orderId,
-        paymentId: payment.id || '',
+        paymentId: payment.id || "",
         amount: pkg.priceUsd,
       };
     } catch (error) {
-      console.error('Square payment creation error:', error);
+      console.error("Square payment creation error:", error);
       throw error;
     }
   }
@@ -196,7 +199,7 @@ class SquareService {
       const response = await paymentsApi.getPayment(paymentId);
       return response.result.payment;
     } catch (error) {
-      console.error('Error retrieving payment:', error);
+      console.error("Error retrieving payment:", error);
       throw error;
     }
   }
@@ -213,18 +216,18 @@ class SquareService {
         amountMoney: amountInCents
           ? {
               amount: amountInCents,
-              currency: 'USD',
+              currency: "USD",
             }
           : undefined,
       });
 
       if (!response.result.refund) {
-        throw new Error('Refund creation failed');
+        throw new Error("Refund creation failed");
       }
 
       return response.result.refund;
     } catch (error) {
-      console.error('Error refunding payment:', error);
+      console.error("Error refunding payment:", error);
       throw error;
     }
   }
@@ -237,16 +240,16 @@ class SquareService {
       const response = await paymentsApi.listPayments(
         undefined, // begin_time
         undefined, // end_time
-        'DESC', // sort_order
+        "DESC", // sort_order
         cursor, // cursor
         limit,
         undefined, // location_id
-        'COMPLETED', // total
+        "COMPLETED", // total
       );
 
       return response.result;
     } catch (error) {
-      console.error('Error listing payments:', error);
+      console.error("Error listing payments:", error);
       throw error;
     }
   }
@@ -288,7 +291,7 @@ class SquareService {
         topPackages: topPackagesResult.rows,
       };
     } catch (error) {
-      console.error('Error getting payment stats:', error);
+      console.error("Error getting payment stats:", error);
       throw error;
     }
   }

@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(container);
 root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 console.log("✅ CoinKrazy.com initialized - " + new Date().toISOString());

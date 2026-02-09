@@ -1,4 +1,4 @@
-import databaseService from './database';
+import databaseService from "./database";
 
 interface Tournament {
   id: string;
@@ -6,7 +6,7 @@ interface Tournament {
   description: string;
   startDate: string;
   endDate: string;
-  status: 'upcoming' | 'active' | 'ended';
+  status: "upcoming" | "active" | "ended";
   totalPrizePool: number;
   entryFee: number;
   maxParticipants: number;
@@ -100,37 +100,45 @@ class TournamentService {
   /**
    * Join tournament
    */
-  async joinTournament(userId: number, tournamentId: string): Promise<{ success: boolean; message: string }> {
+  async joinTournament(
+    userId: number,
+    tournamentId: string,
+  ): Promise<{ success: boolean; message: string }> {
     try {
       // Check if already joined
       const checkQuery = `
         SELECT id FROM tournament_entries 
         WHERE user_id = $1 AND tournament_id = $2
       `;
-      const checkResult = await databaseService.query(checkQuery, [userId, tournamentId]);
+      const checkResult = await databaseService.query(checkQuery, [
+        userId,
+        tournamentId,
+      ]);
 
       if (checkResult.rows.length > 0) {
-        return { success: false, message: 'Already joined this tournament' };
+        return { success: false, message: "Already joined this tournament" };
       }
 
       // Insert entry
       await databaseService.query(
         `INSERT INTO tournament_entries (user_id, tournament_id, joined_at)
          VALUES ($1, $2, NOW())`,
-        [userId, tournamentId]
+        [userId, tournamentId],
       );
 
-      return { success: true, message: 'Successfully joined tournament' };
+      return { success: true, message: "Successfully joined tournament" };
     } catch (error) {
-      console.error('Error joining tournament:', error);
-      return { success: false, message: 'Failed to join tournament' };
+      console.error("Error joining tournament:", error);
+      return { success: false, message: "Failed to join tournament" };
     }
   }
 
   /**
    * Get tournament leaderboard
    */
-  async getTournamentLeaderboard(tournamentId: string): Promise<TournamentEntry[]> {
+  async getTournamentLeaderboard(
+    tournamentId: string,
+  ): Promise<TournamentEntry[]> {
     const query = `
       SELECT 
         ROW_NUMBER() OVER (ORDER BY 
@@ -196,7 +204,7 @@ class TournamentService {
         data.maxBet,
         data.icon,
         data.rules,
-      ]
+      ],
     );
 
     return tournamentId;

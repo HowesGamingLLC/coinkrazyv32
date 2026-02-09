@@ -1,4 +1,4 @@
-import databaseService from './database';
+import databaseService from "./database";
 
 export interface Game {
   id: string;
@@ -8,7 +8,7 @@ export interface Game {
   image: string;
   description: string;
   rtp: number; // Return to Player percentage
-  volatility: 'low' | 'medium' | 'high';
+  volatility: "low" | "medium" | "high";
   maxWin: number;
   minBet: number;
   maxBet: number;
@@ -25,7 +25,7 @@ export interface SpinResult {
   gameId: string;
   userId: number;
   betAmount: number;
-  currency: 'GC' | 'SC';
+  currency: "GC" | "SC";
   result: string; // "win" | "loss"
   payout: number;
   multiplier: number;
@@ -38,14 +38,14 @@ export interface SpinResult {
 // Mock games database - In production, this would be external API
 const GAMES: Game[] = [
   {
-    id: 'mega-fortune',
-    name: 'Mega Fortune',
-    provider: 'NetEnt',
-    category: 'Jackpot',
-    image: '🎰',
-    description: 'Progressive jackpot slot with 5 reels',
+    id: "mega-fortune",
+    name: "Mega Fortune",
+    provider: "NetEnt",
+    category: "Jackpot",
+    image: "🎰",
+    description: "Progressive jackpot slot with 5 reels",
     rtp: 96.9,
-    volatility: 'high',
+    volatility: "high",
     maxWin: 150000,
     minBet: 0.01,
     maxBet: 500,
@@ -57,14 +57,14 @@ const GAMES: Game[] = [
     totalProfit: 850000,
   },
   {
-    id: 'book-of-dead',
-    name: 'Book of Dead',
-    provider: 'Play\'n GO',
-    category: 'Popular',
-    image: '📚',
-    description: 'Egyptian themed adventure slot',
+    id: "book-of-dead",
+    name: "Book of Dead",
+    provider: "Play'n GO",
+    category: "Popular",
+    image: "📚",
+    description: "Egyptian themed adventure slot",
     rtp: 96.21,
-    volatility: 'high',
+    volatility: "high",
     maxWin: 250000,
     minBet: 0.01,
     maxBet: 100,
@@ -76,14 +76,14 @@ const GAMES: Game[] = [
     totalProfit: 1200000,
   },
   {
-    id: 'starburst',
-    name: 'Starburst',
-    provider: 'NetEnt',
-    category: 'Popular',
-    image: '⭐',
-    description: 'Cosmic slot with expanding wilds',
+    id: "starburst",
+    name: "Starburst",
+    provider: "NetEnt",
+    category: "Popular",
+    image: "⭐",
+    description: "Cosmic slot with expanding wilds",
     rtp: 96.1,
-    volatility: 'low',
+    volatility: "low",
     maxWin: 50000,
     minBet: 0.01,
     maxBet: 100,
@@ -95,14 +95,14 @@ const GAMES: Game[] = [
     totalProfit: 950000,
   },
   {
-    id: 'gonzo-quest',
-    name: 'Gonzo\'s Quest',
-    provider: 'NetEnt',
-    category: 'Adventure',
-    image: '🗿',
-    description: 'Jungle adventure with falling symbols',
+    id: "gonzo-quest",
+    name: "Gonzo's Quest",
+    provider: "NetEnt",
+    category: "Adventure",
+    image: "🗿",
+    description: "Jungle adventure with falling symbols",
     rtp: 96.0,
-    volatility: 'medium',
+    volatility: "medium",
     maxWin: 125000,
     minBet: 0.01,
     maxBet: 100,
@@ -114,14 +114,14 @@ const GAMES: Game[] = [
     totalProfit: 700000,
   },
   {
-    id: 'wolf-gold',
-    name: 'Wolf Gold',
-    provider: 'Pragmatic',
-    category: 'New Games',
-    image: '🐺',
-    description: 'Wild west wolf hunt',
+    id: "wolf-gold",
+    name: "Wolf Gold",
+    provider: "Pragmatic",
+    category: "New Games",
+    image: "🐺",
+    description: "Wild west wolf hunt",
     rtp: 96.01,
-    volatility: 'medium',
+    volatility: "medium",
     maxWin: 500000,
     minBet: 0.01,
     maxBet: 250,
@@ -133,14 +133,14 @@ const GAMES: Game[] = [
     totalProfit: 450000,
   },
   {
-    id: 'sweet-bonanza',
-    name: 'Sweet Bonanza',
-    provider: 'Pragmatic',
-    category: 'Popular',
-    image: '🍭',
-    description: 'Candy land of wins',
+    id: "sweet-bonanza",
+    name: "Sweet Bonanza",
+    provider: "Pragmatic",
+    category: "Popular",
+    image: "🍭",
+    description: "Candy land of wins",
     rtp: 96.48,
-    volatility: 'medium',
+    volatility: "medium",
     maxWin: 211100,
     minBet: 0.01,
     maxBet: 125,
@@ -152,14 +152,14 @@ const GAMES: Game[] = [
     totalProfit: 1500000,
   },
   {
-    id: 'gates-of-olympus',
-    name: 'Gates of Olympus',
-    provider: 'Pragmatic',
-    category: 'Mythology',
-    image: '⚡',
-    description: 'Godly rewards await',
+    id: "gates-of-olympus",
+    name: "Gates of Olympus",
+    provider: "Pragmatic",
+    category: "Mythology",
+    image: "⚡",
+    description: "Godly rewards await",
     rtp: 96.5,
-    volatility: 'high',
+    volatility: "high",
     maxWin: 500000,
     minBet: 0.01,
     maxBet: 250,
@@ -180,11 +180,9 @@ class SlotsService {
     try {
       // Try to get from database first
       const result = await databaseService.getActiveGames();
-      return result.length > 0
-        ? result
-        : this.seedGamesIfNeeded();
+      return result.length > 0 ? result : this.seedGamesIfNeeded();
     } catch (error) {
-      console.error('Error fetching games from database:', error);
+      console.error("Error fetching games from database:", error);
       return GAMES;
     }
   }
@@ -220,13 +218,13 @@ class SlotsService {
     gameId: string,
     userId: number,
     betAmount: number,
-    currency: 'GC' | 'SC',
+    currency: "GC" | "SC",
   ): Promise<SpinResult> {
     const spinId = `spin_${Date.now()}_${userId}_${gameId}`;
     const game = await this.getGameById(gameId);
 
     if (!game) {
-      throw new Error('Game not found');
+      throw new Error("Game not found");
     }
 
     // Validate bet
@@ -236,18 +234,18 @@ class SlotsService {
 
     // Get user balance
     const balance = await databaseService.getUserBalance(userId);
-    if (currency === 'GC' && balance.gold_coins < betAmount * 1000) {
-      throw new Error('Insufficient Gold Coins');
+    if (currency === "GC" && balance.gold_coins < betAmount * 1000) {
+      throw new Error("Insufficient Gold Coins");
     }
-    if (currency === 'SC' && balance.sweeps_coins < betAmount) {
-      throw new Error('Insufficient Sweeps Coins');
+    if (currency === "SC" && balance.sweeps_coins < betAmount) {
+      throw new Error("Insufficient Sweeps Coins");
     }
 
     // Deduct bet
     await databaseService.updateUserBalance(
       userId,
-      currency === 'GC' ? -betAmount : 0,
-      currency === 'SC' ? -betAmount : 0,
+      currency === "GC" ? -betAmount : 0,
+      currency === "SC" ? -betAmount : 0,
       `Bet on ${game.name}`,
       gameId,
     );
@@ -260,12 +258,12 @@ class SlotsService {
 
     // If win, add payout
     let finalPayout = 0;
-    if (result === 'win') {
+    if (result === "win") {
       finalPayout = payout;
       await databaseService.updateUserBalance(
         userId,
-        currency === 'GC' ? finalPayout : 0,
-        currency === 'SC' ? finalPayout : 0,
+        currency === "GC" ? finalPayout : 0,
+        currency === "SC" ? finalPayout : 0,
         `Won on ${game.name} (${multiplier}x)`,
         gameId,
       );
@@ -309,11 +307,11 @@ class SlotsService {
       const profit = betAmount - finalPayout;
       await databaseService.updateGameStats(
         gameId,
-        currency === 'GC' ? profit : 0,
-        currency === 'SC' ? profit : 0,
+        currency === "GC" ? profit : 0,
+        currency === "SC" ? profit : 0,
       );
     } catch (error) {
-      console.error('Error recording spin:', error);
+      console.error("Error recording spin:", error);
     }
 
     return spinResult;
@@ -326,7 +324,7 @@ class SlotsService {
     game: Game,
     betAmount: number,
   ): {
-    result: 'win' | 'loss';
+    result: "win" | "loss";
     payout: number;
     multiplier: number;
     isJackpot: boolean;
@@ -339,16 +337,16 @@ class SlotsService {
 
     // Adjust based on volatility
     let winChance = baseWinChance;
-    if (game.volatility === 'low') {
+    if (game.volatility === "low") {
       winChance = baseWinChance + 2;
-    } else if (game.volatility === 'high') {
+    } else if (game.volatility === "high") {
       winChance = baseWinChance - 2;
     }
 
     // Check for win
     if (randomValue > winChance) {
       return {
-        result: 'loss',
+        result: "loss",
         payout: 0,
         multiplier: 0,
         isJackpot: false,
@@ -364,15 +362,14 @@ class SlotsService {
     } else {
       // Random multiplier between 2x and 50x (except jackpot)
       const multipliers = [2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 8, 10, 15, 20, 25];
-      multiplier =
-        multipliers[Math.floor(Math.random() * multipliers.length)];
+      multiplier = multipliers[Math.floor(Math.random() * multipliers.length)];
     }
 
     // Ensure payout doesn't exceed max win
     const payout = Math.min(betAmount * multiplier, game.maxWin);
 
     return {
-      result: 'win',
+      result: "win",
       payout,
       multiplier: multiplier,
       isJackpot,
@@ -395,7 +392,7 @@ class SlotsService {
    * Generate random symbols for reel display
    */
   private generateSymbols(reels: number): string[] {
-    const symbols = ['🎰', '🍒', '🍋', '🍊', '👑', '💎', '7️⃣', '⭐'];
+    const symbols = ["🎰", "🍒", "🍋", "🍊", "👑", "💎", "7️⃣", "⭐"];
     const result: string[] = [];
     for (let i = 0; i < reels; i++) {
       result.push(symbols[Math.floor(Math.random() * symbols.length)]);
@@ -434,7 +431,7 @@ class SlotsService {
       }
       return GAMES;
     } catch (error) {
-      console.error('Error seeding games:', error);
+      console.error("Error seeding games:", error);
       return GAMES;
     }
   }

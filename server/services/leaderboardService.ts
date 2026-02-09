@@ -1,4 +1,4 @@
-import databaseService from './database';
+import databaseService from "./database";
 
 interface LeaderboardEntry {
   rank: number;
@@ -46,7 +46,7 @@ class LeaderboardService {
       winCount: row.win_count,
       totalWinnings: row.total_winnings,
       level: row.level || 1,
-      avatarEmoji: row.avatar_emoji || '🎮',
+      avatarEmoji: row.avatar_emoji || "🎮",
     }));
   }
 
@@ -84,14 +84,16 @@ class LeaderboardService {
       winCount: row.win_count,
       totalWinnings: row.total_winnings,
       level: row.level || 1,
-      avatarEmoji: row.avatar_emoji || '🎮',
+      avatarEmoji: row.avatar_emoji || "🎮",
     }));
   }
 
   /**
    * Get all-time leaderboard
    */
-  async getAllTimeLeaderboard(limit: number = 100): Promise<LeaderboardEntry[]> {
+  async getAllTimeLeaderboard(
+    limit: number = 100,
+  ): Promise<LeaderboardEntry[]> {
     const query = `
       SELECT 
         ROW_NUMBER() OVER (ORDER BY 
@@ -121,7 +123,7 @@ class LeaderboardService {
       winCount: row.win_count,
       totalWinnings: row.total_winnings,
       level: row.level || 1,
-      avatarEmoji: row.avatar_emoji || '🎮',
+      avatarEmoji: row.avatar_emoji || "🎮",
     }));
   }
 

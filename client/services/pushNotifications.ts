@@ -19,7 +19,7 @@ interface NotificationPreferences {
 }
 
 class PushNotificationService {
-  private permission: NotificationPermission = 'default';
+  private permission: NotificationPermission = "default";
   private preferences: NotificationPreferences = {
     enabled: true,
     wins: true,
@@ -39,9 +39,9 @@ class PushNotificationService {
    * Check notification permission
    */
   async checkPermission(): Promise<NotificationPermission> {
-    if (!('Notification' in window)) {
-      console.log('Notifications not supported');
-      return 'denied';
+    if (!("Notification" in window)) {
+      console.log("Notifications not supported");
+      return "denied";
     }
 
     this.permission = Notification.permission;
@@ -52,20 +52,20 @@ class PushNotificationService {
    * Request notification permission
    */
   async requestPermission(): Promise<boolean> {
-    if (!('Notification' in window)) {
+    if (!("Notification" in window)) {
       return false;
     }
 
-    if (this.permission === 'granted') {
+    if (this.permission === "granted") {
       return true;
     }
 
     try {
       const permission = await Notification.requestPermission();
       this.permission = permission;
-      return permission === 'granted';
+      return permission === "granted";
     } catch (error) {
-      console.error('Error requesting notification permission:', error);
+      console.error("Error requesting notification permission:", error);
       return false;
     }
   }
@@ -74,16 +74,16 @@ class PushNotificationService {
    * Send notification
    */
   async sendNotification(options: PushNotificationOptions): Promise<void> {
-    if (!this.preferences.enabled || this.permission !== 'granted') {
+    if (!this.preferences.enabled || this.permission !== "granted") {
       return;
     }
 
     try {
       const notification = new Notification(options.title, {
         body: options.body,
-        icon: options.icon || '🎰',
-        badge: options.badge || '🎰',
-        tag: options.tag || 'coinkrazy-notification',
+        icon: options.icon || "🎰",
+        badge: options.badge || "🎰",
+        tag: options.tag || "coinkrazy-notification",
         requireInteraction: options.requireInteraction || false,
         actions: options.actions || [],
       });
@@ -93,21 +93,25 @@ class PushNotificationService {
         notification.close();
       };
     } catch (error) {
-      console.error('Error sending notification:', error);
+      console.error("Error sending notification:", error);
     }
   }
 
   /**
    * Notify win
    */
-  async notifyWin(gameId: string, amount: number, multiplier: number): Promise<void> {
+  async notifyWin(
+    gameId: string,
+    amount: number,
+    multiplier: number,
+  ): Promise<void> {
     if (!this.preferences.wins) return;
 
     await this.sendNotification({
-      title: '🎉 You Won!',
+      title: "🎉 You Won!",
       body: `${amount} coins with ${multiplier}x multiplier!`,
-      icon: '🎰',
-      tag: 'win-notification',
+      icon: "🎰",
+      tag: "win-notification",
     });
   }
 
@@ -116,10 +120,10 @@ class PushNotificationService {
    */
   async notifyJackpot(gameId: string, amount: number): Promise<void> {
     await this.sendNotification({
-      title: '🎊 JACKPOT! 🎊',
+      title: "🎊 JACKPOT! 🎊",
       body: `You won ${amount.toLocaleString()} coins!`,
-      icon: '👑',
-      tag: 'jackpot-notification',
+      icon: "👑",
+      tag: "jackpot-notification",
       requireInteraction: true,
     });
   }
@@ -131,10 +135,10 @@ class PushNotificationService {
     if (!this.preferences.messages) return;
 
     await this.sendNotification({
-      title: 'New Message',
+      title: "New Message",
       body: `${fromUser} sent you a message`,
-      icon: '💬',
-      tag: 'message-notification',
+      icon: "💬",
+      tag: "message-notification",
     });
   }
 
@@ -145,10 +149,10 @@ class PushNotificationService {
     if (!this.preferences.tournaments) return;
 
     await this.sendNotification({
-      title: 'Tournament Starting',
+      title: "Tournament Starting",
       body: `${tournamentName} is now live!`,
-      icon: '🏆',
-      tag: 'tournament-notification',
+      icon: "🏆",
+      tag: "tournament-notification",
     });
   }
 
@@ -159,10 +163,10 @@ class PushNotificationService {
     if (!this.preferences.newGames) return;
 
     await this.sendNotification({
-      title: 'New Game Available',
+      title: "New Game Available",
       body: `Check out ${gameName}!`,
-      icon: '🎮',
-      tag: 'new-game-notification',
+      icon: "🎮",
+      tag: "new-game-notification",
     });
   }
 
@@ -175,8 +179,8 @@ class PushNotificationService {
     await this.sendNotification({
       title,
       body: description,
-      icon: '🎁',
-      tag: 'promo-notification',
+      icon: "🎁",
+      tag: "promo-notification",
     });
   }
 
@@ -187,10 +191,10 @@ class PushNotificationService {
     if (!this.preferences.reminders) return;
 
     await this.sendNotification({
-      title: 'Reminder',
+      title: "Reminder",
       body: message,
-      icon: '⏰',
-      tag: 'reminder-notification',
+      icon: "⏰",
+      tag: "reminder-notification",
     });
   }
 
@@ -213,19 +217,22 @@ class PushNotificationService {
    * Save preferences to localStorage
    */
   private savePreferences(): void {
-    localStorage.setItem('notificationPreferences', JSON.stringify(this.preferences));
+    localStorage.setItem(
+      "notificationPreferences",
+      JSON.stringify(this.preferences),
+    );
   }
 
   /**
    * Load preferences from localStorage
    */
   private loadPreferences(): void {
-    const saved = localStorage.getItem('notificationPreferences');
+    const saved = localStorage.getItem("notificationPreferences");
     if (saved) {
       try {
         this.preferences = { ...this.preferences, ...JSON.parse(saved) };
       } catch (error) {
-        console.error('Error loading notification preferences:', error);
+        console.error("Error loading notification preferences:", error);
       }
     }
   }
@@ -235,7 +242,7 @@ class PushNotificationService {
    */
   scheduleNotification(
     options: PushNotificationOptions,
-    delayMs: number
+    delayMs: number,
   ): NodeJS.Timeout {
     return setTimeout(() => {
       this.sendNotification(options);
@@ -246,17 +253,17 @@ class PushNotificationService {
    * Register service worker for push notifications
    */
   async registerServiceWorker(): Promise<ServiceWorkerRegistration | null> {
-    if (!('serviceWorker' in navigator)) {
-      console.log('Service Workers not supported');
+    if (!("serviceWorker" in navigator)) {
+      console.log("Service Workers not supported");
       return null;
     }
 
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
-      console.log('Service Worker registered');
+      const registration = await navigator.serviceWorker.register("/sw.js");
+      console.log("Service Worker registered");
       return registration;
     } catch (error) {
-      console.error('Service Worker registration failed:', error);
+      console.error("Service Worker registration failed:", error);
       return null;
     }
   }

@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 interface EmailOptions {
   to: string;
@@ -9,7 +9,7 @@ interface EmailOptions {
 
 class EmailService {
   private transporter: any;
-  private fromEmail = process.env.EMAIL_FROM || 'noreply@coinkrazy.com';
+  private fromEmail = process.env.EMAIL_FROM || "noreply@coinkrazy.com";
   private isEnabled = !!process.env.SMTP_HOST;
 
   constructor() {
@@ -17,8 +17,8 @@ class EmailService {
     if (process.env.SMTP_HOST) {
       this.transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || '587'),
-        secure: process.env.SMTP_SECURE === 'true',
+        port: parseInt(process.env.SMTP_PORT || "587"),
+        secure: process.env.SMTP_SECURE === "true",
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
@@ -26,16 +26,16 @@ class EmailService {
       });
     } else if (process.env.SENDGRID_API_KEY) {
       // SendGrid configuration
-      const sgTransport = require('nodemailer-sendgrid-transport');
+      const sgTransport = require("nodemailer-sendgrid-transport");
       this.transporter = nodemailer.createTransport(
         sgTransport({
           auth: {
             api_key: process.env.SENDGRID_API_KEY,
           },
-        })
+        }),
       );
     } else {
-      console.warn('Email service not configured. Emails will not be sent.');
+      console.warn("Email service not configured. Emails will not be sent.");
     }
   }
 
@@ -61,7 +61,7 @@ class EmailService {
       console.log(`Email sent to ${options.to}: ${options.subject}`);
       return true;
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.error("Error sending email:", error);
       return false;
     }
   }
@@ -72,9 +72,9 @@ class EmailService {
   async sendVerificationEmail(
     email: string,
     username: string,
-    verificationToken: string
+    verificationToken: string,
   ): Promise<boolean> {
-    const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:8080'}/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${process.env.FRONTEND_URL || "http://localhost:8080"}/verify-email?token=${verificationToken}`;
 
     const html = `
       <html style="font-family: Arial, sans-serif; background-color: #f5f5f5;">
@@ -127,7 +127,7 @@ class EmailService {
 
     return this.sendEmail({
       to: email,
-      subject: 'Verify Your CoinKrazy Account',
+      subject: "Verify Your CoinKrazy Account",
       html,
       text: `Welcome to CoinKrazy! Click here to verify your email: ${verificationUrl}`,
     });
@@ -143,7 +143,7 @@ class EmailService {
     amount: number,
     goldCoins: number,
     bonusCoins: number,
-    orderId: string
+    orderId: string,
   ): Promise<boolean> {
     const html = `
       <html style="font-family: Arial, sans-serif; background-color: #f5f5f5;">
@@ -189,7 +189,7 @@ class EmailService {
               </div>
 
               <div style="margin: 30px 0;">
-                <a href="${process.env.FRONTEND_URL || 'http://localhost:8080'}/games" style="display: inline-block; background-color: #ffd700; color: #000; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 16px;">
+                <a href="${process.env.FRONTEND_URL || "http://localhost:8080"}/games" style="display: inline-block; background-color: #ffd700; color: #000; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 16px;">
                   Start Playing Now
                 </a>
               </div>
@@ -220,10 +220,7 @@ class EmailService {
   /**
    * Send welcome email
    */
-  async sendWelcomeEmail(
-    email: string,
-    username: string
-  ): Promise<boolean> {
+  async sendWelcomeEmail(email: string, username: string): Promise<boolean> {
     const html = `
       <html style="font-family: Arial, sans-serif; background-color: #f5f5f5;">
         <body style="margin: 0; padding: 20px;">
@@ -262,7 +259,7 @@ class EmailService {
               </div>
 
               <div style="margin: 30px 0;">
-                <a href="${process.env.FRONTEND_URL || 'http://localhost:8080'}/games" style="display: inline-block; background-color: #4ade80; color: #fff; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 16px;">
+                <a href="${process.env.FRONTEND_URL || "http://localhost:8080"}/games" style="display: inline-block; background-color: #4ade80; color: #fff; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 16px;">
                   Play Now →
                 </a>
               </div>
@@ -294,7 +291,7 @@ class EmailService {
     username: string,
     promoTitle: string,
     promoDescription: string,
-    bonusDetails: string
+    bonusDetails: string,
   ): Promise<boolean> {
     const html = `
       <html style="font-family: Arial, sans-serif; background-color: #f5f5f5;">
@@ -320,7 +317,7 @@ class EmailService {
               </div>
 
               <div style="margin: 30px 0;">
-                <a href="${process.env.FRONTEND_URL || 'http://localhost:8080'}/games" style="display: inline-block; background-color: #ffd700; color: #000; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 16px;">
+                <a href="${process.env.FRONTEND_URL || "http://localhost:8080"}/games" style="display: inline-block; background-color: #ffd700; color: #000; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 16px;">
                   Claim Your Bonus
                 </a>
               </div>
@@ -350,9 +347,9 @@ class EmailService {
   async sendPasswordResetEmail(
     email: string,
     username: string,
-    resetToken: string
+    resetToken: string,
   ): Promise<boolean> {
-    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:8080'}/reset-password?token=${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL || "http://localhost:8080"}/reset-password?token=${resetToken}`;
 
     const html = `
       <html style="font-family: Arial, sans-serif; background-color: #f5f5f5;">
@@ -393,7 +390,7 @@ class EmailService {
 
     return this.sendEmail({
       to: email,
-      subject: 'CoinKrazy: Password Reset Request',
+      subject: "CoinKrazy: Password Reset Request",
       html,
       text: `Click here to reset your password: ${resetUrl}`,
     });

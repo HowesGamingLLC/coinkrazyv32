@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import { RequestHandler } from "express";
 
 /**
  * Validate email format
@@ -27,16 +27,16 @@ export function validatePassword(password: string): {
   const errors: string[] = [];
 
   if (password.length < 6) {
-    errors.push('Password must be at least 6 characters');
+    errors.push("Password must be at least 6 characters");
   }
   if (!/[A-Z]/.test(password)) {
-    errors.push('Password must contain an uppercase letter');
+    errors.push("Password must contain an uppercase letter");
   }
   if (!/[a-z]/.test(password)) {
-    errors.push('Password must contain a lowercase letter');
+    errors.push("Password must contain a lowercase letter");
   }
   if (!/[0-9]/.test(password)) {
-    errors.push('Password must contain a number');
+    errors.push("Password must contain a number");
   }
 
   return {
@@ -49,14 +49,14 @@ export function validatePassword(password: string): {
  * Sanitize string input (prevent XSS)
  */
 export function sanitizeString(input: any): string {
-  if (typeof input !== 'string') {
-    return '';
+  if (typeof input !== "string") {
+    return "";
   }
 
   return input
-    .replace(/[<>]/g, '') // Remove angle brackets
-    .replace(/javascript:/gi, '') // Remove javascript: protocol
-    .replace(/on\w+\s*=/gi, '') // Remove event handlers
+    .replace(/[<>]/g, "") // Remove angle brackets
+    .replace(/javascript:/gi, "") // Remove javascript: protocol
+    .replace(/on\w+\s*=/gi, "") // Remove event handlers
     .trim();
 }
 
@@ -66,7 +66,7 @@ export function sanitizeString(input: any): string {
 export const validateInput: RequestHandler = (req, res, next) => {
   // Sanitize all string inputs
   const sanitize = (obj: any): any => {
-    if (typeof obj !== 'object' || obj === null) {
+    if (typeof obj !== "object" || obj === null) {
       return obj;
     }
 
@@ -77,9 +77,9 @@ export const validateInput: RequestHandler = (req, res, next) => {
     const sanitized: any = {};
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
-        if (typeof obj[key] === 'string') {
+        if (typeof obj[key] === "string") {
           sanitized[key] = sanitizeString(obj[key]);
-        } else if (typeof obj[key] === 'object') {
+        } else if (typeof obj[key] === "object") {
           sanitized[key] = sanitize(obj[key]);
         } else {
           sanitized[key] = obj[key];
@@ -106,29 +106,31 @@ export function validateRegistration(data: any): {
 
   // Email validation
   if (!data.email || !validateEmail(data.email)) {
-    errors.push('Invalid email address');
+    errors.push("Invalid email address");
   }
 
   // Username validation
   if (!data.username || !validateUsername(data.username)) {
-    errors.push('Username must be 3-20 characters, alphanumeric and underscores only');
+    errors.push(
+      "Username must be 3-20 characters, alphanumeric and underscores only",
+    );
   }
 
   // Password validation
-  const passwordValidation = validatePassword(data.password || '');
+  const passwordValidation = validatePassword(data.password || "");
   if (!passwordValidation.valid) {
     errors.push(...passwordValidation.errors);
   }
 
   // Date of birth validation
   if (!data.dateOfBirth) {
-    errors.push('Date of birth is required');
+    errors.push("Date of birth is required");
   } else {
     const birthDate = new Date(data.dateOfBirth);
     const today = new Date();
     const age = today.getFullYear() - birthDate.getFullYear();
     if (age < 18) {
-      errors.push('You must be 18 or older');
+      errors.push("You must be 18 or older");
     }
   }
 
@@ -141,7 +143,11 @@ export function validateRegistration(data: any): {
 /**
  * Validate bet amount
  */
-export function validateBetAmount(amount: any, minBet: number, maxBet: number): boolean {
+export function validateBetAmount(
+  amount: any,
+  minBet: number,
+  maxBet: number,
+): boolean {
   const betAmount = parseFloat(amount);
   return !isNaN(betAmount) && betAmount >= minBet && betAmount <= maxBet;
 }
@@ -158,7 +164,7 @@ export function validateBalance(balance: any): boolean {
  * Prevent SQL injection by checking for suspicious patterns
  */
 export function checkForSQLInjection(input: any): boolean {
-  if (typeof input !== 'string') {
+  if (typeof input !== "string") {
     return false;
   }
 
@@ -178,11 +184,11 @@ export function checkForSQLInjection(input: any): boolean {
  */
 export const checkSQLInjection: RequestHandler = (req, res, next) => {
   const checkInput = (obj: any): boolean => {
-    if (typeof obj === 'string') {
+    if (typeof obj === "string") {
       return checkForSQLInjection(obj);
     }
 
-    if (typeof obj !== 'object' || obj === null) {
+    if (typeof obj !== "object" || obj === null) {
       return false;
     }
 
@@ -195,7 +201,7 @@ export const checkSQLInjection: RequestHandler = (req, res, next) => {
 
   if (checkInput(req.body) || checkInput(req.query)) {
     return res.status(400).json({
-      error: 'Invalid input detected',
+      error: "Invalid input detected",
     });
   }
 

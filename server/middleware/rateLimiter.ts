@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import { RequestHandler } from "express";
 
 interface RateLimitStore {
   [key: string]: {
@@ -15,16 +15,20 @@ const store: RateLimitStore = {};
  * @param options.maxRequests - Max requests per window (default: 100)
  * @param options.keyGenerator - Function to generate key from request (default: IP address)
  */
-export function createRateLimiter(options: {
-  windowMs?: number;
-  maxRequests?: number;
-  keyGenerator?: (req: any) => string;
-} = {}): RequestHandler {
+export function createRateLimiter(
+  options: {
+    windowMs?: number;
+    maxRequests?: number;
+    keyGenerator?: (req: any) => string;
+  } = {},
+): RequestHandler {
   const windowMs = options.windowMs || 15 * 60 * 1000; // 15 minutes
   const maxRequests = options.maxRequests || 100;
-  const keyGenerator = options.keyGenerator || ((req: any) => {
-    return req.ip || req.connection.remoteAddress || 'unknown';
-  });
+  const keyGenerator =
+    options.keyGenerator ||
+    ((req: any) => {
+      return req.ip || req.connection.remoteAddress || "unknown";
+    });
 
   return (req, res, next) => {
     const key = keyGenerator(req);
@@ -44,17 +48,20 @@ export function createRateLimiter(options: {
     store[key].count++;
 
     // Set response headers
-    res.setHeader('X-RateLimit-Limit', maxRequests);
-    res.setHeader('X-RateLimit-Remaining', Math.max(0, maxRequests - store[key].count));
+    res.setHeader("X-RateLimit-Limit", maxRequests);
     res.setHeader(
-      'X-RateLimit-Reset',
-      new Date(store[key].resetTime).toISOString()
+      "X-RateLimit-Remaining",
+      Math.max(0, maxRequests - store[key].count),
+    );
+    res.setHeader(
+      "X-RateLimit-Reset",
+      new Date(store[key].resetTime).toISOString(),
     );
 
     // Check limit
     if (store[key].count > maxRequests) {
       return res.status(429).json({
-        error: 'Too many requests',
+        error: "Too many requests",
         retryAfter: Math.ceil((store[key].resetTime - now) / 1000),
       });
     }

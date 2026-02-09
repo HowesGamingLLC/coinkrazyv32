@@ -1,4 +1,4 @@
-import databaseService from './database';
+import databaseService from "./database";
 
 interface UserProfile {
   id: number;
@@ -37,18 +37,22 @@ class SocialService {
   /**
    * Send message to user
    */
-  async sendMessage(fromUserId: number, toUserId: number, content: string): Promise<boolean> {
+  async sendMessage(
+    fromUserId: number,
+    toUserId: number,
+    content: string,
+  ): Promise<boolean> {
     try {
       // Check if users are friends (optional)
       await databaseService.query(
         `INSERT INTO messages (from_user_id, to_user_id, content, is_read)
          VALUES ($1, $2, $3, false)`,
-        [fromUserId, toUserId, content.substring(0, 1000)]
+        [fromUserId, toUserId, content.substring(0, 1000)],
       );
 
       return true;
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
       return false;
     }
   }
@@ -81,7 +85,7 @@ class SocialService {
   async markMessageRead(messageId: number): Promise<void> {
     await databaseService.query(
       `UPDATE messages SET is_read = true WHERE id = $1`,
-      [messageId]
+      [messageId],
     );
   }
 
@@ -95,7 +99,10 @@ class SocialService {
         SELECT id FROM friendships 
         WHERE (user_id = $1 AND friend_id = $2) OR (user_id = $2 AND friend_id = $1)
       `;
-      const checkResult = await databaseService.query(checkQuery, [userId, friendId]);
+      const checkResult = await databaseService.query(checkQuery, [
+        userId,
+        friendId,
+      ]);
 
       if (checkResult.rows.length > 0) {
         return false; // Already friends
@@ -105,12 +112,12 @@ class SocialService {
       await databaseService.query(
         `INSERT INTO friendships (user_id, friend_id, status)
          VALUES ($1, $2, 'accepted')`,
-        [userId, friendId]
+        [userId, friendId],
       );
 
       return true;
     } catch (error) {
-      console.error('Error adding friend:', error);
+      console.error("Error adding friend:", error);
       return false;
     }
   }
@@ -140,9 +147,9 @@ class SocialService {
       username: row.username,
       level: row.level || 1,
       totalWinnings: row.total_winnings,
-      favoriteGame: '',
-      bio: '',
-      avatarEmoji: row.avatar_emoji || '🎮',
+      favoriteGame: "",
+      bio: "",
+      avatarEmoji: row.avatar_emoji || "🎮",
       isFriend: true,
       canMessage: true,
     }));
@@ -151,20 +158,26 @@ class SocialService {
   /**
    * Create guild
    */
-  async createGuild(createdById: number, name: string, description: string, icon: string, isPublic: boolean): Promise<string> {
+  async createGuild(
+    createdById: number,
+    name: string,
+    description: string,
+    icon: string,
+    isPublic: boolean,
+  ): Promise<string> {
     const guildId = `guild_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
 
     await databaseService.query(
       `INSERT INTO guilds (id, name, description, icon, created_by, is_public)
        VALUES ($1, $2, $3, $4, $5, $6)`,
-      [guildId, name, description, icon, createdById, isPublic]
+      [guildId, name, description, icon, createdById, isPublic],
     );
 
     // Add creator as member
     await databaseService.query(
       `INSERT INTO guild_members (guild_id, user_id, role)
        VALUES ($1, $2, 'owner')`,
-      [guildId, createdById]
+      [guildId, createdById],
     );
 
     return guildId;
@@ -177,7 +190,10 @@ class SocialService {
     try {
       // Check if already member
       const checkQuery = `SELECT id FROM guild_members WHERE guild_id = $1 AND user_id = $2`;
-      const checkResult = await databaseService.query(checkQuery, [guildId, userId]);
+      const checkResult = await databaseService.query(checkQuery, [
+        guildId,
+        userId,
+      ]);
 
       if (checkResult.rows.length > 0) {
         return false; // Already member
@@ -187,12 +203,12 @@ class SocialService {
       await databaseService.query(
         `INSERT INTO guild_members (guild_id, user_id, role)
          VALUES ($1, $2, 'member')`,
-        [guildId, userId]
+        [guildId, userId],
       );
 
       return true;
     } catch (error) {
-      console.error('Error joining guild:', error);
+      console.error("Error joining guild:", error);
       return false;
     }
   }
@@ -297,17 +313,21 @@ class SocialService {
   /**
    * Send guild message
    */
-  async sendGuildMessage(userId: number, guildId: string, content: string): Promise<boolean> {
+  async sendGuildMessage(
+    userId: number,
+    guildId: string,
+    content: string,
+  ): Promise<boolean> {
     try {
       await databaseService.query(
         `INSERT INTO guild_messages (guild_id, user_id, content)
          VALUES ($1, $2, $3)`,
-        [guildId, userId, content.substring(0, 500)]
+        [guildId, userId, content.substring(0, 500)],
       );
 
       return true;
     } catch (error) {
-      console.error('Error sending guild message:', error);
+      console.error("Error sending guild message:", error);
       return false;
     }
   }

@@ -1,4 +1,4 @@
-import databaseService from './database';
+import databaseService from "./database";
 
 interface VIPTier {
   tier: number;
@@ -31,10 +31,10 @@ class VIPService {
   private vipTiers: VIPTier[] = [
     {
       tier: 0,
-      name: 'Standard',
+      name: "Standard",
       minSpent: 0,
       maxSpent: 99.99,
-      icon: '👤',
+      icon: "👤",
       benefits: {
         depositBonus: 10,
         cashbackRate: 0,
@@ -46,10 +46,10 @@ class VIPService {
     },
     {
       tier: 1,
-      name: 'Silver',
+      name: "Silver",
       minSpent: 100,
       maxSpent: 499.99,
-      icon: '⭐',
+      icon: "⭐",
       benefits: {
         depositBonus: 15,
         cashbackRate: 1,
@@ -61,10 +61,10 @@ class VIPService {
     },
     {
       tier: 2,
-      name: 'Gold',
+      name: "Gold",
       minSpent: 500,
       maxSpent: 1999.99,
-      icon: '✨',
+      icon: "✨",
       benefits: {
         depositBonus: 20,
         cashbackRate: 2,
@@ -76,10 +76,10 @@ class VIPService {
     },
     {
       tier: 3,
-      name: 'Platinum',
+      name: "Platinum",
       minSpent: 2000,
       maxSpent: 9999.99,
-      icon: '💎',
+      icon: "💎",
       benefits: {
         depositBonus: 25,
         cashbackRate: 3,
@@ -91,10 +91,10 @@ class VIPService {
     },
     {
       tier: 4,
-      name: 'Diamond',
+      name: "Diamond",
       minSpent: 10000,
       maxSpent: Number.MAX_SAFE_INTEGER,
-      icon: '👑',
+      icon: "👑",
       benefits: {
         depositBonus: 30,
         cashbackRate: 5,
@@ -161,26 +161,34 @@ class VIPService {
   /**
    * Award VIP points
    */
-  async awardVIPPoints(userId: number, points: number, reason: string): Promise<void> {
+  async awardVIPPoints(
+    userId: number,
+    points: number,
+    reason: string,
+  ): Promise<void> {
     await databaseService.query(
       `UPDATE users 
        SET vip_points = GREATEST(0, vip_points + $2)
        WHERE id = $1`,
-      [userId, points]
+      [userId, points],
     );
 
     // Log the transaction
     await databaseService.query(
       `INSERT INTO vip_transactions (user_id, points_change, reason, created_at)
        VALUES ($1, $2, $3, NOW())`,
-      [userId, points, reason]
+      [userId, points, reason],
     );
   }
 
   /**
    * Redeem VIP points
    */
-  async redeemVIPPoints(userId: number, points: number, rewardType: string): Promise<boolean> {
+  async redeemVIPPoints(
+    userId: number,
+    points: number,
+    rewardType: string,
+  ): Promise<boolean> {
     // Check balance
     const balanceQuery = `SELECT vip_points FROM users WHERE id = $1`;
     const result = await databaseService.query(balanceQuery, [userId]);
@@ -195,25 +203,30 @@ class VIPService {
       `UPDATE users 
        SET vip_points = vip_points - $2
        WHERE id = $1`,
-      [userId, points]
+      [userId, points],
     );
 
     // Apply reward
     let goldCoinsReward = 0;
     switch (rewardType) {
-      case 'coins_100':
+      case "coins_100":
         goldCoinsReward = 100;
         break;
-      case 'coins_500':
+      case "coins_500":
         goldCoinsReward = 500;
         break;
-      case 'coins_1000':
+      case "coins_1000":
         goldCoinsReward = 1000;
         break;
     }
 
     if (goldCoinsReward > 0) {
-      await databaseService.updateUserBalance(userId, goldCoinsReward, 0, `VIP Points Redemption: ${rewardType}`);
+      await databaseService.updateUserBalance(
+        userId,
+        goldCoinsReward,
+        0,
+        `VIP Points Redemption: ${rewardType}`,
+      );
     }
 
     return true;
@@ -229,11 +242,20 @@ class VIPService {
   /**
    * Calculate tier progress
    */
-  calculateProgress(vipStatus: VIPStatus): { percentage: number; current: number; next: number } {
+  calculateProgress(vipStatus: VIPStatus): {
+    percentage: number;
+    current: number;
+    next: number;
+  } {
     const currentTierSpend = vipStatus.tier.minSpent;
-    const nextTierSpend = this.vipTiers[vipStatus.currentTier + 1]?.minSpent || vipStatus.tier.maxSpent;
+    const nextTierSpend =
+      this.vipTiers[vipStatus.currentTier + 1]?.minSpent ||
+      vipStatus.tier.maxSpent;
 
-    const percentage = ((vipStatus.totalSpent - currentTierSpend) / (nextTierSpend - currentTierSpend)) * 100;
+    const percentage =
+      ((vipStatus.totalSpent - currentTierSpend) /
+        (nextTierSpend - currentTierSpend)) *
+      100;
 
     return {
       percentage: Math.min(100, Math.max(0, percentage)),

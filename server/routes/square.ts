@@ -1,7 +1,7 @@
-import express, { RequestHandler } from 'express';
-import { authenticateToken } from '../middleware/auth';
-import squareService from '../services/squareService';
-import databaseService from '../services/database';
+import express, { RequestHandler } from "express";
+import { authenticateToken } from "../middleware/auth";
+import squareService from "../services/squareService";
+import databaseService from "../services/database";
 
 const router = express.Router();
 
@@ -17,10 +17,10 @@ const getPackages: RequestHandler = (_req, res) => {
       packages,
     });
   } catch (error) {
-    console.error('Error getting packages:', error);
+    console.error("Error getting packages:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to get packages',
+      error: "Failed to get packages",
     });
   }
 };
@@ -38,7 +38,7 @@ const createPayment: RequestHandler = async (req, res) => {
     if (!packageId || !nonce) {
       return res.status(400).json({
         success: false,
-        error: 'packageId and nonce are required',
+        error: "packageId and nonce are required",
       });
     }
 
@@ -47,12 +47,16 @@ const createPayment: RequestHandler = async (req, res) => {
     if (!pkg) {
       return res.status(404).json({
         success: false,
-        error: 'Package not found',
+        error: "Package not found",
       });
     }
 
     // Process payment
-    const result = await squareService.createPaymentRequest(packageId, user.id, nonce);
+    const result = await squareService.createPaymentRequest(
+      packageId,
+      user.id,
+      nonce,
+    );
 
     // Get updated balance
     const balance = await databaseService.getUserBalance(user.id);
@@ -70,11 +74,11 @@ const createPayment: RequestHandler = async (req, res) => {
       message: `Successfully purchased ${pkg.name}!`,
     });
   } catch (error) {
-    console.error('Payment creation error:', error);
+    console.error("Payment creation error:", error);
     res.status(500).json({
       success: false,
-      error: 'Payment processing failed',
-      details: error instanceof Error ? error.message : 'Unknown error',
+      error: "Payment processing failed",
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 };
@@ -94,10 +98,10 @@ const getPayment: RequestHandler = async (req, res) => {
       payment,
     });
   } catch (error) {
-    console.error('Error getting payment:', error);
+    console.error("Error getting payment:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to get payment',
+      error: "Failed to get payment",
     });
   }
 };
@@ -112,10 +116,10 @@ const refundPayment: RequestHandler = async (req, res) => {
     const user = (req as any).user;
 
     // Check if user is admin
-    if (user.role !== 'admin') {
+    if (user.role !== "admin") {
       return res.status(403).json({
         success: false,
-        error: 'Unauthorized - admin only',
+        error: "Unauthorized - admin only",
       });
     }
 
@@ -124,7 +128,7 @@ const refundPayment: RequestHandler = async (req, res) => {
     if (!paymentId) {
       return res.status(400).json({
         success: false,
-        error: 'paymentId is required',
+        error: "paymentId is required",
       });
     }
 
@@ -136,10 +140,10 @@ const refundPayment: RequestHandler = async (req, res) => {
       refund,
     });
   } catch (error) {
-    console.error('Refund error:', error);
+    console.error("Refund error:", error);
     res.status(500).json({
       success: false,
-      error: 'Refund failed',
+      error: "Refund failed",
     });
   }
 };
@@ -166,10 +170,10 @@ const getUserOrders: RequestHandler = async (req, res) => {
       orders: result.rows,
     });
   } catch (error) {
-    console.error('Error getting orders:', error);
+    console.error("Error getting orders:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to get orders',
+      error: "Failed to get orders",
     });
   }
 };
@@ -183,10 +187,10 @@ const getPaymentStats: RequestHandler = async (req, res) => {
     const user = (req as any).user;
 
     // Check if user is admin
-    if (user.role !== 'admin') {
+    if (user.role !== "admin") {
       return res.status(403).json({
         success: false,
-        error: 'Unauthorized - admin only',
+        error: "Unauthorized - admin only",
       });
     }
 
@@ -197,20 +201,20 @@ const getPaymentStats: RequestHandler = async (req, res) => {
       stats,
     });
   } catch (error) {
-    console.error('Error getting stats:', error);
+    console.error("Error getting stats:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to get stats',
+      error: "Failed to get stats",
     });
   }
 };
 
 // Routes
-router.get('/packages', getPackages);
-router.post('/create-payment', authenticateToken, createPayment);
-router.get('/payment/:paymentId', authenticateToken, getPayment);
-router.post('/refund', authenticateToken, refundPayment);
-router.get('/orders', authenticateToken, getUserOrders);
-router.get('/stats', authenticateToken, getPaymentStats);
+router.get("/packages", getPackages);
+router.post("/create-payment", authenticateToken, createPayment);
+router.get("/payment/:paymentId", authenticateToken, getPayment);
+router.post("/refund", authenticateToken, refundPayment);
+router.get("/orders", authenticateToken, getUserOrders);
+router.get("/stats", authenticateToken, getPaymentStats);
 
 export default router;

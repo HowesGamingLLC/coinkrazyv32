@@ -62,7 +62,7 @@ export const GameLobby = () => {
       filtered = filtered.filter(
         (game) =>
           game.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          game.provider.toLowerCase().includes(searchQuery.toLowerCase())
+          game.provider.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -123,7 +123,8 @@ export const GameLobby = () => {
               fontSize: "0.875rem",
               outline: "none",
               boxSizing: "border-box",
-              backgroundImage: "url('data:image/svg+xml;utf8,<svg fill=\"%238b949e\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm8 15.5l4.7 4.7a1 1 0 1 0 1.4-1.4l-4.7-4.7\" /></svg>')",
+              backgroundImage:
+                'url(\'data:image/svg+xml;utf8,<svg fill="%238b949e" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm8 15.5l4.7 4.7a1 1 0 1 0 1.4-1.4l-4.7-4.7" /></svg>\')',
               backgroundRepeat: "no-repeat",
               backgroundPosition: "10px center",
               backgroundSize: "16px",

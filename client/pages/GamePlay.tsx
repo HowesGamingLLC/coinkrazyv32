@@ -84,7 +84,7 @@ export const GamePlay = () => {
   const generateReels = () => {
     const symbols = ["🎰", "🍒", "🍋", "🍊", "👑", "💎", "7️⃣", "⭐"];
     return Array.from({ length: 5 }).map(
-      () => symbols[Math.floor(Math.random() * symbols.length)]
+      () => symbols[Math.floor(Math.random() * symbols.length)],
     );
   };
 
@@ -93,9 +93,7 @@ export const GamePlay = () => {
 
     // Validate bet
     const availableBalance =
-      currency === "GC"
-        ? balance.goldCoins / 1000
-        : balance.sweepsCoins;
+      currency === "GC" ? balance.goldCoins / 1000 : balance.sweepsCoins;
     if (betAmount > availableBalance) {
       setError("Insufficient balance");
       return;
@@ -557,7 +555,7 @@ export const GamePlay = () => {
                   game.maxBet,
                   currency === "GC"
                     ? balance.goldCoins / 1000
-                    : balance.sweepsCoins
+                    : balance.sweepsCoins,
                 )}
                 value={betAmount}
                 onChange={(e) => setBetAmount(Number(e.target.value))}
@@ -579,8 +577,7 @@ export const GamePlay = () => {
                   onClick={() => setCurrency("GC")}
                   style={{
                     padding: "0.75rem",
-                    backgroundColor:
-                      currency === "GC" ? "#ffd700" : "#21262d",
+                    backgroundColor: currency === "GC" ? "#ffd700" : "#21262d",
                     color: currency === "GC" ? "#000" : "#f0f6fc",
                     border: `1px solid ${
                       currency === "GC" ? "#ffd700" : "#30363d"
@@ -596,8 +593,7 @@ export const GamePlay = () => {
                   onClick={() => setCurrency("SC")}
                   style={{
                     padding: "0.75rem",
-                    backgroundColor:
-                      currency === "SC" ? "#7c3aed" : "#21262d",
+                    backgroundColor: currency === "SC" ? "#7c3aed" : "#21262d",
                     color: currency === "SC" ? "#fff" : "#f0f6fc",
                     border: `1px solid ${
                       currency === "SC" ? "#7c3aed" : "#30363d"
@@ -627,10 +623,12 @@ export const GamePlay = () => {
                 cursor: spinning ? "not-allowed" : "pointer",
               }}
               onMouseEnter={(e) => {
-                if (!spinning) e.currentTarget.style.backgroundColor = "#ffed4e";
+                if (!spinning)
+                  e.currentTarget.style.backgroundColor = "#ffed4e";
               }}
               onMouseLeave={(e) => {
-                if (!spinning) e.currentTarget.style.backgroundColor = "#ffd700";
+                if (!spinning)
+                  e.currentTarget.style.backgroundColor = "#ffd700";
               }}
             >
               {spinning ? "SPINNING..." : "SPIN"}
