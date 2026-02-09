@@ -54,50 +54,63 @@ router.get("/eligibility", verifyToken, async (req: Request, res: Response) => {
 });
 
 // Accept sweepstakes terms
-router.post("/accept-terms", verifyToken, async (req: Request, res: Response) => {
-  try {
-    const userId = (req as any).user?.id;
+router.post(
+  "/accept-terms",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const userId = (req as any).user?.id;
 
-    const success = await sweepstakesService.acceptTerms(userId);
+      const success = await sweepstakesService.acceptTerms(userId);
 
-    if (success) {
-      res.json({ message: "Terms accepted successfully" });
-    } else {
+      if (success) {
+        res.json({ message: "Terms accepted successfully" });
+      } else {
+        res.status(500).json({ error: "Failed to accept terms" });
+      }
+    } catch (error: any) {
+      console.error("Error accepting terms:", error);
       res.status(500).json({ error: "Failed to accept terms" });
     }
-  } catch (error: any) {
-    console.error("Error accepting terms:", error);
-    res.status(500).json({ error: "Failed to accept terms" });
-  }
-});
+  },
+);
 
 // Get user's compliance status
-router.get("/compliance-status", verifyToken, async (req: Request, res: Response) => {
-  try {
-    const userId = (req as any).user?.id;
+router.get(
+  "/compliance-status",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const userId = (req as any).user?.id;
 
-    const status = await sweepstakesService.getComplianceStatus(userId);
-    res.json(status || { message: "No compliance record found" });
-  } catch (error: any) {
-    console.error("Error fetching compliance status:", error);
-    res.status(500).json({ error: "Failed to fetch compliance status" });
-  }
-});
+      const status = await sweepstakesService.getComplianceStatus(userId);
+      res.json(status || { message: "No compliance record found" });
+    } catch (error: any) {
+      console.error("Error fetching compliance status:", error);
+      res.status(500).json({ error: "Failed to fetch compliance status" });
+    }
+  },
+);
 
 // Verify eligibility for sweepstakes entry
-router.get("/verify-entry", verifyToken, async (req: Request, res: Response) => {
-  try {
-    const userId = (req as any).user?.id;
+router.get(
+  "/verify-entry",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const userId = (req as any).user?.id;
 
-    const verification = await sweepstakesService.verifyEligibilityForEntry(userId);
-    res.json(verification);
-  } catch (error: any) {
-    console.error("Error verifying eligibility:", error);
-    res.status(400).json({
-      error: error.message || "Failed to verify eligibility",
-    });
-  }
-});
+      const verification =
+        await sweepstakesService.verifyEligibilityForEntry(userId);
+      res.json(verification);
+    } catch (error: any) {
+      console.error("Error verifying eligibility:", error);
+      res.status(400).json({
+        error: error.message || "Failed to verify eligibility",
+      });
+    }
+  },
+);
 
 // Admin: Get compliance statistics
 router.get("/admin/stats", verifyToken, async (req: Request, res: Response) => {

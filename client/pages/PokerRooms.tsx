@@ -17,7 +17,9 @@ const PokerRooms = () => {
   const [selectedTable, setSelectedTable] = useState<PokerTable | null>(null);
   const [buyInAmount, setBuyInAmount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"tables" | "play" | "history">("tables");
+  const [activeTab, setActiveTab] = useState<"tables" | "play" | "history">(
+    "tables",
+  );
   const [playerStack, setPlayerStack] = useState(0);
 
   useEffect(() => {
@@ -43,20 +45,28 @@ const PokerRooms = () => {
       return;
     }
 
-    if (buyInAmount < selectedTable.minBuyIn || buyInAmount > selectedTable.maxBuyIn) {
-      alert(`Buy-in must be between ${selectedTable.minBuyIn} and ${selectedTable.maxBuyIn}`);
+    if (
+      buyInAmount < selectedTable.minBuyIn ||
+      buyInAmount > selectedTable.maxBuyIn
+    ) {
+      alert(
+        `Buy-in must be between ${selectedTable.minBuyIn} and ${selectedTable.maxBuyIn}`,
+      );
       return;
     }
 
     try {
-      const response = await fetch(`/api/poker/tables/${selectedTable.tableId}/join`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      const response = await fetch(
+        `/api/poker/tables/${selectedTable.tableId}/join`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ buyIn: buyInAmount }),
         },
-        body: JSON.stringify({ buyIn: buyInAmount }),
-      });
+      );
 
       if (response.ok) {
         setPlayerStack(buyInAmount);
@@ -75,14 +85,17 @@ const PokerRooms = () => {
     if (!selectedTable) return;
 
     try {
-      const response = await fetch(`/api/poker/tables/${selectedTable.tableId}/leave`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      const response = await fetch(
+        `/api/poker/tables/${selectedTable.tableId}/leave`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ cashOut: playerStack }),
         },
-        body: JSON.stringify({ cashOut: playerStack }),
-      });
+      );
 
       if (response.ok) {
         setSelectedTable(null);
@@ -163,9 +176,13 @@ const PokerRooms = () => {
           </h2>
 
           {loading ? (
-            <p style={{ textAlign: "center", color: "#8b949e" }}>Loading tables...</p>
+            <p style={{ textAlign: "center", color: "#8b949e" }}>
+              Loading tables...
+            </p>
           ) : tables.length === 0 ? (
-            <p style={{ textAlign: "center", color: "#8b949e" }}>No tables available</p>
+            <p style={{ textAlign: "center", color: "#8b949e" }}>
+              No tables available
+            </p>
           ) : (
             <div
               style={{
@@ -180,23 +197,41 @@ const PokerRooms = () => {
                   onClick={() => setSelectedTable(table)}
                   style={{
                     padding: "1.5rem",
-                    backgroundColor: selectedTable?.tableId === table.tableId ? "#21262d" : "#161b22",
-                    border: selectedTable?.tableId === table.tableId ? "2px solid #ffd700" : "1px solid #30363d",
+                    backgroundColor:
+                      selectedTable?.tableId === table.tableId
+                        ? "#21262d"
+                        : "#161b22",
+                    border:
+                      selectedTable?.tableId === table.tableId
+                        ? "2px solid #ffd700"
+                        : "1px solid #30363d",
                     borderRadius: "0.75rem",
                     cursor: "pointer",
                     transition: "all 0.3s ease",
-                    boxShadow: selectedTable?.tableId === table.tableId ? "0 0 20px rgba(255, 215, 0, 0.3)" : "none",
+                    boxShadow:
+                      selectedTable?.tableId === table.tableId
+                        ? "0 0 20px rgba(255, 215, 0, 0.3)"
+                        : "none",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = "#ffd700";
                     e.currentTarget.style.transform = "translateY(-4px)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = selectedTable?.tableId === table.tableId ? "#ffd700" : "#30363d";
+                    e.currentTarget.style.borderColor =
+                      selectedTable?.tableId === table.tableId
+                        ? "#ffd700"
+                        : "#30363d";
                     e.currentTarget.style.transform = "translateY(0)";
                   }}
                 >
-                  <h3 style={{ color: "#ffd700", marginBottom: "1rem", fontSize: "1.25rem" }}>
+                  <h3
+                    style={{
+                      color: "#ffd700",
+                      marginBottom: "1rem",
+                      fontSize: "1.25rem",
+                    }}
+                  >
                     {table.name}
                   </h3>
                   <div
@@ -209,26 +244,36 @@ const PokerRooms = () => {
                     }}
                   >
                     <div>
-                      <p style={{ color: "#8b949e", marginBottom: "0.25rem" }}>Stakes</p>
+                      <p style={{ color: "#8b949e", marginBottom: "0.25rem" }}>
+                        Stakes
+                      </p>
                       <p style={{ color: "#f0f6fc", fontWeight: "bold" }}>
                         ${table.stakes.smallBlind} / ${table.stakes.bigBlind}
                       </p>
                     </div>
                     <div>
-                      <p style={{ color: "#8b949e", marginBottom: "0.25rem" }}>Players</p>
+                      <p style={{ color: "#8b949e", marginBottom: "0.25rem" }}>
+                        Players
+                      </p>
                       <p style={{ color: "#f0f6fc", fontWeight: "bold" }}>
                         {table.currentPlayers} / {table.maxPlayers}
                       </p>
                     </div>
                     <div>
-                      <p style={{ color: "#8b949e", marginBottom: "0.25rem" }}>Buy-in Range</p>
+                      <p style={{ color: "#8b949e", marginBottom: "0.25rem" }}>
+                        Buy-in Range
+                      </p>
                       <p style={{ color: "#f0f6fc", fontWeight: "bold" }}>
                         ${table.minBuyIn} - ${table.maxBuyIn}
                       </p>
                     </div>
                     <div>
-                      <p style={{ color: "#8b949e", marginBottom: "0.25rem" }}>Pot</p>
-                      <p style={{ color: "#7c3aed", fontWeight: "bold" }}>💎 {table.totalPot}</p>
+                      <p style={{ color: "#8b949e", marginBottom: "0.25rem" }}>
+                        Pot
+                      </p>
+                      <p style={{ color: "#7c3aed", fontWeight: "bold" }}>
+                        💎 {table.totalPot}
+                      </p>
                     </div>
                   </div>
                   <div
@@ -267,7 +312,9 @@ const PokerRooms = () => {
                 borderRadius: "0.75rem",
               }}
             >
-              <h3 style={{ color: "#ffd700", marginBottom: "1rem" }}>Join {selectedTable.name}</h3>
+              <h3 style={{ color: "#ffd700", marginBottom: "1rem" }}>
+                Join {selectedTable.name}
+              </h3>
               <div style={{ marginBottom: "1rem" }}>
                 <label
                   style={{
@@ -277,7 +324,8 @@ const PokerRooms = () => {
                     fontSize: "0.875rem",
                   }}
                 >
-                  Buy-in Amount (${selectedTable.minBuyIn} - ${selectedTable.maxBuyIn})
+                  Buy-in Amount (${selectedTable.minBuyIn} - $
+                  {selectedTable.maxBuyIn})
                 </label>
                 <input
                   type="number"
@@ -321,7 +369,13 @@ const PokerRooms = () => {
       {/* Play Game Tab */}
       {activeTab === "play" && selectedTable && (
         <div>
-          <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem", color: "#ffd700" }}>
+          <h2
+            style={{
+              fontSize: "1.5rem",
+              marginBottom: "1.5rem",
+              color: "#ffd700",
+            }}
+          >
             Playing at {selectedTable.name}
           </h2>
 
@@ -347,10 +401,19 @@ const PokerRooms = () => {
                 position: "relative",
               }}
             >
-              <h3 style={{ color: "#ffd700", textAlign: "center" }}>Texas Hold'em</h3>
+              <h3 style={{ color: "#ffd700", textAlign: "center" }}>
+                Texas Hold'em
+              </h3>
 
               {/* Community Cards */}
-              <div style={{ display: "flex", justifyContent: "center", gap: "0.5rem", margin: "1rem 0" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "0.5rem",
+                  margin: "1rem 0",
+                }}
+              >
                 {["🎴", "🎴", "🎴", "🎴", "🎴"].map((card, i) => (
                   <div
                     key={i}
@@ -374,7 +437,13 @@ const PokerRooms = () => {
               {/* Pot Display */}
               <div style={{ textAlign: "center" }}>
                 <p style={{ color: "#8b949e", marginBottom: "0.5rem" }}>Pot</p>
-                <p style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#7c3aed" }}>
+                <p
+                  style={{
+                    fontSize: "1.5rem",
+                    fontWeight: "bold",
+                    color: "#7c3aed",
+                  }}
+                >
                   💎 {selectedTable.totalPot}
                 </p>
               </div>
@@ -391,8 +460,16 @@ const PokerRooms = () => {
                   marginBottom: "1rem",
                 }}
               >
-                <h4 style={{ color: "#ffd700", marginBottom: "1rem" }}>Your Hand</h4>
-                <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+                <h4 style={{ color: "#ffd700", marginBottom: "1rem" }}>
+                  Your Hand
+                </h4>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "0.5rem",
+                    marginBottom: "1rem",
+                  }}
+                >
                   <div
                     style={{
                       flex: 1,
@@ -427,8 +504,22 @@ const PokerRooms = () => {
                     marginBottom: "1rem",
                   }}
                 >
-                  <p style={{ color: "#8b949e", marginBottom: "0.25rem", fontSize: "0.875rem" }}>Stack</p>
-                  <p style={{ color: "#f0f6fc", fontSize: "1.25rem", fontWeight: "bold" }}>
+                  <p
+                    style={{
+                      color: "#8b949e",
+                      marginBottom: "0.25rem",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Stack
+                  </p>
+                  <p
+                    style={{
+                      color: "#f0f6fc",
+                      fontSize: "1.25rem",
+                      fontWeight: "bold",
+                    }}
+                  >
                     💎 {playerStack}
                   </p>
                 </div>
@@ -491,7 +582,13 @@ const PokerRooms = () => {
       {/* History Tab */}
       {activeTab === "history" && (
         <div>
-          <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem", color: "#ffd700" }}>
+          <h2
+            style={{
+              fontSize: "1.5rem",
+              marginBottom: "1.5rem",
+              color: "#ffd700",
+            }}
+          >
             Your Poker Statistics
           </h2>
           <div
@@ -503,7 +600,9 @@ const PokerRooms = () => {
               textAlign: "center",
             }}
           >
-            <p style={{ color: "#8b949e" }}>Join a table to start playing and see your statistics!</p>
+            <p style={{ color: "#8b949e" }}>
+              Join a table to start playing and see your statistics!
+            </p>
           </div>
         </div>
       )}

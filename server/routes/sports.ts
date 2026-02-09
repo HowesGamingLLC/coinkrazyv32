@@ -59,7 +59,11 @@ router.post("/parlays", verifyToken, async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Invalid wager amount" });
     }
 
-    const parlay = await sportsParlayService.createParlay(userId, legs, totalWager);
+    const parlay = await sportsParlayService.createParlay(
+      userId,
+      legs,
+      totalWager,
+    );
     res.status(201).json(parlay);
   } catch (error: any) {
     console.error("Error creating parlay:", error);
@@ -68,56 +72,70 @@ router.post("/parlays", verifyToken, async (req: Request, res: Response) => {
 });
 
 // Get user's parlays
-router.get("/user/parlays", verifyToken, async (req: Request, res: Response) => {
-  try {
-    const userId = (req as any).user?.id;
-    const limit = parseInt(req.query.limit as string) || 50;
+router.get(
+  "/user/parlays",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const userId = (req as any).user?.id;
+      const limit = parseInt(req.query.limit as string) || 50;
 
-    const parlays = await sportsParlayService.getUserParlays(userId, limit);
-    res.json(parlays);
-  } catch (error: any) {
-    console.error("Error fetching user parlays:", error);
-    res.status(500).json({ error: "Failed to fetch user parlays" });
-  }
-});
+      const parlays = await sportsParlayService.getUserParlays(userId, limit);
+      res.json(parlays);
+    } catch (error: any) {
+      console.error("Error fetching user parlays:", error);
+      res.status(500).json({ error: "Failed to fetch user parlays" });
+    }
+  },
+);
 
 // Get specific parlay
-router.get("/parlays/:parlayId", verifyToken, async (req: Request, res: Response) => {
-  try {
-    const { parlayId } = req.params;
+router.get(
+  "/parlays/:parlayId",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const { parlayId } = req.params;
 
-    const parlay = await sportsParlayService.getParlay(parlayId);
+      const parlay = await sportsParlayService.getParlay(parlayId);
 
-    if (!parlay) {
-      return res.status(404).json({ error: "Parlay not found" });
+      if (!parlay) {
+        return res.status(404).json({ error: "Parlay not found" });
+      }
+
+      res.json(parlay);
+    } catch (error: any) {
+      console.error("Error fetching parlay:", error);
+      res.status(500).json({ error: "Failed to fetch parlay" });
     }
-
-    res.json(parlay);
-  } catch (error: any) {
-    console.error("Error fetching parlay:", error);
-    res.status(500).json({ error: "Failed to fetch parlay" });
-  }
-});
+  },
+);
 
 // Update event score (admin only)
-router.post("/events/:eventId/score", verifyToken, async (req: Request, res: Response) => {
-  try {
-    const { eventId } = req.params;
-    const { homeScore, awayScore } = req.body;
+router.post(
+  "/events/:eventId/score",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const { eventId } = req.params;
+      const { homeScore, awayScore } = req.body;
 
-    if (homeScore === undefined || awayScore === undefined) {
-      return res.status(400).json({
-        error: "Missing required fields: homeScore, awayScore",
-      });
+      if (homeScore === undefined || awayScore === undefined) {
+        return res.status(400).json({
+          error: "Missing required fields: homeScore, awayScore",
+        });
+      }
+
+      await sportsParlayService.updateEventScore(eventId, homeScore, awayScore);
+      res.json({ message: "Event score updated successfully" });
+    } catch (error: any) {
+      console.error("Error updating event score:", error);
+      res
+        .status(400)
+        .json({ error: error.message || "Failed to update event score" });
     }
-
-    await sportsParlayService.updateEventScore(eventId, homeScore, awayScore);
-    res.json({ message: "Event score updated successfully" });
-  } catch (error: any) {
-    console.error("Error updating event score:", error);
-    res.status(400).json({ error: error.message || "Failed to update event score" });
-  }
-});
+  },
+);
 
 // Get admin statistics
 router.get("/admin/stats", verifyToken, async (req: Request, res: Response) => {
@@ -131,16 +149,20 @@ router.get("/admin/stats", verifyToken, async (req: Request, res: Response) => {
 });
 
 // Get parlay history (admin)
-router.get("/admin/history", verifyToken, async (req: Request, res: Response) => {
-  try {
-    const limit = parseInt(req.query.limit as string) || 100;
+router.get(
+  "/admin/history",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 100;
 
-    const history = await sportsParlayService.getParlayHistory(limit);
-    res.json(history);
-  } catch (error: any) {
-    console.error("Error fetching parlay history:", error);
-    res.status(500).json({ error: "Failed to fetch parlay history" });
-  }
-});
+      const history = await sportsParlayService.getParlayHistory(limit);
+      res.json(history);
+    } catch (error: any) {
+      console.error("Error fetching parlay history:", error);
+      res.status(500).json({ error: "Failed to fetch parlay history" });
+    }
+  },
+);
 
 export default router;
