@@ -68,7 +68,7 @@ export class PokerService {
       RETURNING *
     `;
 
-    const result = await this.pool.query(query, [
+    const result = await databaseService.query(query, [
       tableId,
       name,
       smallBlind,
