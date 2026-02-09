@@ -101,7 +101,7 @@ export class PokerService {
     const tableQuery = `
       SELECT * FROM poker_tables WHERE table_id = $1
     `;
-    const tableResult = await this.pool.query(tableQuery, [tableId]);
+    const tableResult = await databaseService.query(tableQuery, [tableId]);
     if (!tableResult.rows[0]) {
       throw new Error("Table not found");
     }
