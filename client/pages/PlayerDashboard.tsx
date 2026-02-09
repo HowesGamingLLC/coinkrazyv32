@@ -56,27 +56,36 @@ export const PlayerDashboard = () => {
   const fetchUserData = async () => {
     try {
       const token = localStorage.getItem("token");
+      const userData = localStorage.getItem("user");
+
+      if (!userData) {
+        navigate("/auth");
+        return;
+      }
+
+      const user = JSON.parse(userData);
+      const userId = user.id;
 
       // Fetch user data
-      const userResponse = await fetch("/api/user/profile", {
+      const userResponse = await fetch(`/api/user/profile?userId=${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (userResponse.ok) {
-        const userData = await userResponse.json();
-        setUser(userData.user);
+        const data = await userResponse.json();
+        setUser(data.user);
       }
 
       // Fetch balance
-      const balanceResponse = await fetch("/api/user/balance", {
+      const balanceResponse = await fetch(`/api/user/balance?userId=${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (balanceResponse.ok) {
-        const balanceData = await balanceResponse.json();
-        setBalance(balanceData.balance);
+        const data = await balanceResponse.json();
+        setBalance(data.balance);
       }
 
       // Fetch transactions
-      const transResponse = await fetch("/api/user/transactions?limit=50", {
+      const transResponse = await fetch(`/api/user/transactions?userId=${userId}&limit=50`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (transResponse.ok) {
