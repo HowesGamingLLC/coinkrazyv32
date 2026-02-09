@@ -16,6 +16,8 @@ import GamePlay from "./pages/GamePlay";
 import AdminDashboard from "./pages/AdminDashboard";
 import PlayerDashboard from "./pages/PlayerDashboard";
 import BonusFeatures from "./pages/BonusFeatures";
+import PokerRooms from "./pages/PokerRooms";
+import SportsBetting from "./pages/SportsBetting";
 
 // Error Boundary to catch any React errors
 class ErrorBoundary extends React.Component<
