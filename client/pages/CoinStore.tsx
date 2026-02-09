@@ -21,17 +21,17 @@ export const CoinStore = () => {
 
   // Initialize Square Web Payments SDK
   useEffect(() => {
-    const initSquare = async () => {
-      try {
-        const webPayments = await loadSquareWebPayments();
-        setWeb(webPayments);
-      } catch (error) {
-        console.error("Error loading Square SDK:", error);
-        setError("Failed to load payment system");
-      }
-    };
+    // const initSquare = async () => {
+    //   try {
+    //     const webPayments = await loadSquareWebPayments();
+    //     setWeb(webPayments);
+    //   } catch (error) {
+    //     console.error("Error loading Square SDK:", error);
+    //     setError("Failed to load payment system");
+    //   }
+    // };
 
-    initSquare();
+    // initSquare();
     fetchPackages();
   }, []);
 
