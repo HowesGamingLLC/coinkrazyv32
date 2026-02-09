@@ -60,5 +60,8 @@ export function createServer() {
   // Game routes
   app.use("/api/games", gameRoutes);
 
+  // Bonus features routes (leaderboards, VIP, tournaments, affiliates, social)
+  app.use("/api/bonus", bonusFeatureRoutes);
+
   return app;
 }
