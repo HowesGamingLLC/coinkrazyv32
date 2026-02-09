@@ -10,6 +10,9 @@ import paymentRoutes from "./routes/payments";
 import squareRoutes from "./routes/square";
 import gameRoutes from "./routes/games";
 import bonusFeatureRoutes from "./routes/bonus-features";
+import pokerRoutes from "./routes/poker";
+import sportsRoutes from "./routes/sports";
+import sweepstakesRoutes from "./routes/sweepstakes";
 import { apiRateLimiter, authRateLimiter } from "./middleware/rateLimiter";
 import { validateInput, checkSQLInjection } from "./middleware/validation";
 
