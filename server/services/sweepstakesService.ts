@@ -49,7 +49,7 @@ export class SweepstakesService {
       LEFT JOIN user_balances ub ON u.id = ub.user_id
       WHERE u.id = $1
     `;
-    const result = await this.pool.query(query, [userId]);
+    const result = await databaseService.query(query, [userId]);
     if (!result.rows[0]) {
       throw new Error("User not found");
     }
@@ -98,7 +98,7 @@ export class SweepstakesService {
         accepted_at = CURRENT_TIMESTAMP
       RETURNING id
     `;
-    const result = await this.pool.query(query, [userId]);
+    const result = await databaseService.query(query, [userId]);
     return !!result.rows[0];
   }
 
@@ -108,7 +108,7 @@ export class SweepstakesService {
       SELECT * FROM sweepstakes_compliance
       WHERE user_id = $1
     `;
-    const result = await this.pool.query(query, [userId]);
+    const result = await databaseService.query(query, [userId]);
     return result.rows[0] || null;
   }
 
