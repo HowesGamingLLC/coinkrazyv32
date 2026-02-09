@@ -14,6 +14,7 @@ import CoinStore from "./pages/CoinStore";
 import GameLobby from "./pages/GameLobby";
 import GamePlay from "./pages/GamePlay";
 import AdminDashboard from "./pages/AdminDashboard";
+import PlayerDashboard from "./pages/PlayerDashboard";
 
 // Error Boundary to catch any React errors
 class ErrorBoundary extends React.Component<
