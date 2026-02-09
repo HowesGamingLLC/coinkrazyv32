@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import databaseService from "./database";
 
 interface SweepstakesRules {
   minAge: number;
@@ -20,7 +20,6 @@ interface ComplianceCheck {
 
 export class SweepstakesService {
   private static instance: SweepstakesService;
-  private pool: Pool;
 
   // Ineligible states for sweepstakes (Montana, South Carolina, Tennessee, etc.)
   private ineligibleStates = [
@@ -33,13 +32,11 @@ export class SweepstakesService {
   // Countries where sweepstakes are allowed
   private eligibleCountries = ["US", "CA"];
 
-  private constructor(pool: Pool) {
-    this.pool = pool;
-  }
+  private constructor() {}
 
-  static getInstance(pool: Pool): SweepstakesService {
+  static getInstance(): SweepstakesService {
     if (!SweepstakesService.instance) {
-      SweepstakesService.instance = new SweepstakesService(pool);
+      SweepstakesService.instance = new SweepstakesService();
     }
     return SweepstakesService.instance;
   }
