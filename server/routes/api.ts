@@ -845,4 +845,143 @@ router.post("/wheel-spins/:userId", async (req, res) => {
   }
 });
 
+// User authenticated endpoints
+// Get user profile
+router.get("/user/profile", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        error: "Authorization token required",
+      });
+    }
+
+    // For now, we'll try to get user from the request or extract from token
+    // In a real app, you'd validate the token against a store
+    const userId = req.query.userId || req.body.userId;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: "User ID required",
+      });
+    }
+
+    const user = await databaseService.query(
+      "SELECT id, email, username, first_name, last_name, role, status, kyc_status, is_email_verified, vip_expires_at, created_at FROM users WHERE id = $1",
+      [parseInt(userId as string)]
+    );
+
+    if (!user.rows.length) {
+      return res.status(404).json({
+        success: false,
+        error: "User not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      user: user.rows[0],
+    });
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch user profile",
+    });
+  }
+});
+
+// Get user balance
+router.get("/user/balance", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        error: "Authorization token required",
+      });
+    }
+
+    const userId = req.query.userId || req.body.userId;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: "User ID required",
+      });
+    }
+
+    const balance = await databaseService.getUserBalance(parseInt(userId as string));
+
+    if (!balance) {
+      return res.status(404).json({
+        success: false,
+        error: "Balance not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      balance: {
+        gold_coins: balance.gold_coins,
+        sweeps_coins: balance.sweeps_coins,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching user balance:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch user balance",
+    });
+  }
+});
+
+// Get user transactions
+router.get("/user/transactions", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        error: "Authorization token required",
+      });
+    }
+
+    const userId = req.query.userId || req.body.userId;
+    const limit = parseInt(req.query.limit as string) || 50;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: "User ID required",
+      });
+    }
+
+    const result = await databaseService.query(
+      "SELECT * FROM transactions WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2",
+      [parseInt(userId as string), limit]
+    );
+
+    res.json({
+      success: true,
+      transactions: result.rows,
+      count: result.rows.length,
+    });
+  } catch (error) {
+    console.error("Error fetching user transactions:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch user transactions",
+    });
+  }
+});
+
 export default router;
