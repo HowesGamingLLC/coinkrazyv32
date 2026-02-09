@@ -822,6 +822,8 @@ const App = () => {
                 <Route path="/bonus" element={<BonusFeatures />} />
                 <Route path="/games" element={<GameLobby />} />
                 <Route path="/game/:gameId" element={<GamePlay />} />
+                <Route path="/poker" element={<PokerRooms />} />
+                <Route path="/sports" element={<SportsBetting />} />
                 <Route path="/" element={<GameLobby />} />
                 <Route path="/slots" element={<GameLobby />} />
                 <Route path="/table-games" element={<MainContent />} />
