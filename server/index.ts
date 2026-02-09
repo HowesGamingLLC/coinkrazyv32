@@ -30,8 +30,10 @@ export function createServer() {
   app.use(validateInput);
   app.use(checkSQLInjection);
 
-  // Rate limiting
-  app.use(apiRateLimiter);
+  // Rate limiting (disabled in development)
+  if (process.env.NODE_ENV === "production") {
+    app.use(apiRateLimiter);
+  }
 
   // Example API routes
   app.get("/api/ping", (_req, res) => {
