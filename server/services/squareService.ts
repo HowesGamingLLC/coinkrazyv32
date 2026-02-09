@@ -1,4 +1,7 @@
-import { Client, Environment } from "square";
+import pkg from "square";
+const { SquareClient, SquareEnvironment } = pkg;
+const Client = SquareClient;
+const Environment = SquareEnvironment;
 import { databaseService } from "./database";
 
 // Square SDK configuration
