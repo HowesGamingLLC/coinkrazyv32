@@ -812,6 +812,7 @@ const App = () => {
             <div style={{ flex: 1, overflow: "auto" }}>
               <Routes>
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/account" element={<PlayerDashboard />} />
                 <Route path="/shop" element={<CoinStore />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/games" element={<GameLobby />} />
@@ -823,7 +824,6 @@ const App = () => {
                 <Route path="/promotions" element={<MainContent />} />
                 <Route path="/loyalty" element={<MainContent />} />
                 <Route path="/prizes" element={<MainContent />} />
-                <Route path="/account" element={<MainContent />} />
                 <Route path="/help" element={<MainContent />} />
                 <Route path="*" element={<GameLobby />} />
               </Routes>
