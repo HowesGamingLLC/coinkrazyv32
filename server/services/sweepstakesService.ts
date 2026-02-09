@@ -290,7 +290,10 @@ export class SweepstakesService {
       ORDER BY cl.checked_at DESC
       LIMIT $1
     `;
-    const result = await this.pool.query(query, [limit]);
+    const result = await databaseService.query(query, [limit]);
     return result.rows;
   }
 }
+
+export const sweepstakesService = SweepstakesService.getInstance();
+export default sweepstakesService;
