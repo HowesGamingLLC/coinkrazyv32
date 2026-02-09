@@ -118,7 +118,7 @@ export class PokerService {
       SELECT COUNT(*) as count FROM poker_players
       WHERE table_id = $1 AND is_active = TRUE
     `;
-    const countResult = await this.pool.query(playerCountQuery, [tableId]);
+    const countResult = await databaseService.query(playerCountQuery, [tableId]);
     if (countResult.rows[0].count >= table.max_players) {
       throw new Error("Table is full");
     }
