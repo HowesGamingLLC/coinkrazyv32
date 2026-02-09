@@ -9,14 +9,26 @@ import seedRoutes from "./routes/seed";
 import paymentRoutes from "./routes/payments";
 import squareRoutes from "./routes/square";
 import gameRoutes from "./routes/games";
+import { apiRateLimiter, authRateLimiter } from "./middleware/rateLimiter";
+import { validateInput, checkSQLInjection } from "./middleware/validation";
 
 export function createServer() {
   const app = express();
 
-  // Middleware
-  app.use(cors());
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  // Security Middleware
+  app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:8080',
+    credentials: true,
+  }));
+  app.use(express.json({ limit: '1mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+  // Input validation
+  app.use(validateInput);
+  app.use(checkSQLInjection);
+
+  // Rate limiting
+  app.use(apiRateLimiter);
 
   // Example API routes
   app.get("/api/ping", (_req, res) => {
