@@ -41,8 +41,8 @@ export function createServer() {
   // Database API routes
   app.use("/api", apiRoutes);
 
-  // Auth routes
-  app.use("/api/auth", authRoutes);
+  // Auth routes (stricter rate limiting)
+  app.use("/api/auth", authRateLimiter, authRoutes);
 
   // Admin initialization route
   app.use("/api", initAdminRoutes);
