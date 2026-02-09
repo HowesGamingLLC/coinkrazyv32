@@ -395,3 +395,6 @@ export class SportsParleyService {
       }));
   }
 }
+
+export const sportsParlayService = SportsParleyService.getInstance();
+export default sportsParlayService;
