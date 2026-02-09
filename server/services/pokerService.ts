@@ -18,7 +18,14 @@ export interface PokerPlayer {
   tableId: string;
   username: string;
   stack: number;
-  position: "button" | "smallBlind" | "bigBlind" | "under-the-gun" | "middle-position" | "cutoff" | "dealer";
+  position:
+    | "button"
+    | "smallBlind"
+    | "bigBlind"
+    | "under-the-gun"
+    | "middle-position"
+    | "cutoff"
+    | "dealer";
   isActive: boolean;
   totalWins: number;
   totalLosses: number;
@@ -96,7 +103,11 @@ export class PokerService {
   }
 
   // Join a poker table
-  async joinTable(tableId: string, userId: number, buyIn: number): Promise<boolean> {
+  async joinTable(
+    tableId: string,
+    userId: number,
+    buyIn: number,
+  ): Promise<boolean> {
     // Verify table exists
     const tableQuery = `
       SELECT * FROM poker_tables WHERE table_id = $1
@@ -110,7 +121,9 @@ export class PokerService {
 
     // Validate buy-in
     if (buyIn < table.min_buy_in || buyIn > table.max_buy_in) {
-      throw new Error(`Buy-in must be between ${table.min_buy_in} and ${table.max_buy_in}`);
+      throw new Error(
+        `Buy-in must be between ${table.min_buy_in} and ${table.max_buy_in}`,
+      );
     }
 
     // Check player count
@@ -118,7 +131,9 @@ export class PokerService {
       SELECT COUNT(*) as count FROM poker_players
       WHERE table_id = $1 AND is_active = TRUE
     `;
-    const countResult = await databaseService.query(playerCountQuery, [tableId]);
+    const countResult = await databaseService.query(playerCountQuery, [
+      tableId,
+    ]);
     if (countResult.rows[0].count >= table.max_players) {
       throw new Error("Table is full");
     }
@@ -138,7 +153,11 @@ export class PokerService {
       VALUES ($1, $2, $3, 'under-the-gun', TRUE)
       RETURNING *
     `;
-    const playerResult = await databaseService.query(playerQuery, [tableId, userId, buyIn]);
+    const playerResult = await databaseService.query(playerQuery, [
+      tableId,
+      userId,
+      buyIn,
+    ]);
 
     // Deduct from user balance
     await databaseService.query(
@@ -163,7 +182,11 @@ export class PokerService {
   }
 
   // Leave a poker table and cash out
-  async leaveTable(tableId: string, userId: number, cashOut: number): Promise<boolean> {
+  async leaveTable(
+    tableId: string,
+    userId: number,
+    cashOut: number,
+  ): Promise<boolean> {
     // Remove player from table
     const query = `
       UPDATE poker_players
@@ -302,7 +325,11 @@ export class PokerService {
   }
 
   // Simulate hand completion and distribute pot
-  async completeHand(handId: string, winnerId: number, winningHand: string): Promise<void> {
+  async completeHand(
+    handId: string,
+    winnerId: number,
+    winningHand: string,
+  ): Promise<void> {
     // Get hand details
     const handQuery = `
       SELECT * FROM poker_hands WHERE hand_id = $1

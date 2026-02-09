@@ -60,8 +60,12 @@ export class SweepstakesService {
     const age = today.getFullYear() - birthDate.getFullYear();
 
     const isAgeEligible = age >= 18;
-    const isStateEligible = !this.ineligibleStates.includes(user.state?.toUpperCase());
-    const isCountryEligible = this.eligibleCountries.includes(user.country?.toUpperCase() || "US");
+    const isStateEligible = !this.ineligibleStates.includes(
+      user.state?.toUpperCase(),
+    );
+    const isCountryEligible = this.eligibleCountries.includes(
+      user.country?.toUpperCase() || "US",
+    );
 
     const isEligible = isAgeEligible && isStateEligible && isCountryEligible;
 
@@ -124,7 +128,13 @@ export class SweepstakesService {
       INSERT INTO compliance_logs (user_id, check_type, age, state, is_eligible, reason, checked_at)
       VALUES ($1, 'eligibility', $2, $3, $4, $5, CURRENT_TIMESTAMP)
     `;
-    await databaseService.query(query, [userId, age, state, isEligible, reason]);
+    await databaseService.query(query, [
+      userId,
+      age,
+      state,
+      isEligible,
+      reason,
+    ]);
   }
 
   // Get contest rules and terms
@@ -135,10 +145,12 @@ export class SweepstakesService {
         minimumAge: 18,
         citizenship: "US or Canadian residents only",
         excludedStates: this.ineligibleStates,
-        noEmployees: "Employees of CoinKrazy and their families are not eligible",
+        noEmployees:
+          "Employees of CoinKrazy and their families are not eligible",
       },
       prizes: {
-        description: "Virtual coins and cash prizes as stated in individual sweepstakes",
+        description:
+          "Virtual coins and cash prizes as stated in individual sweepstakes",
         disclaimer: "No purchase necessary. Free play available.",
       },
       terms: {
@@ -221,7 +233,8 @@ export class SweepstakesService {
           "Account termination for violations",
           "No refunds except where legally required",
         ],
-        governing: "These terms are governed by applicable federal and state law",
+        governing:
+          "These terms are governed by applicable federal and state law",
       },
     };
   }

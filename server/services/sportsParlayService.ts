@@ -112,7 +112,11 @@ export class SportsParleyService {
   }
 
   // Create a parlay
-  async createParlay(userId: number, legs: ParlayLeg[], totalWager: number): Promise<SportsParlay> {
+  async createParlay(
+    userId: number,
+    legs: ParlayLeg[],
+    totalWager: number,
+  ): Promise<SportsParlay> {
     // Validate wager
     if (totalWager <= 0) {
       throw new Error("Wager must be greater than 0");
@@ -123,7 +127,10 @@ export class SportsParleyService {
       SELECT sweeps_coins FROM user_balances WHERE user_id = $1
     `;
     const balanceResult = await databaseService.query(balanceQuery, [userId]);
-    if (!balanceResult.rows[0] || balanceResult.rows[0].sweeps_coins < totalWager) {
+    if (
+      !balanceResult.rows[0] ||
+      balanceResult.rows[0].sweeps_coins < totalWager
+    ) {
       throw new Error("Insufficient balance for parlay wager");
     }
 
@@ -238,7 +245,11 @@ export class SportsParleyService {
   }
 
   // Update event scores (simulated)
-  async updateEventScore(eventId: string, homeScore: number, awayScore: number): Promise<void> {
+  async updateEventScore(
+    eventId: string,
+    homeScore: number,
+    awayScore: number,
+  ): Promise<void> {
     const event = this.eventCache.get(eventId);
     if (!event) {
       throw new Error("Event not found");
@@ -307,7 +318,9 @@ export class SportsParleyService {
       }
 
       if (allLegsResolved) {
-        const allLegsWon = legsResult.rows.every((leg: any) => leg.result === "won");
+        const allLegsWon = legsResult.rows.every(
+          (leg: any) => leg.result === "won",
+        );
         parlay_status = allLegsWon ? "won" : "lost";
 
         // Update parlay status
@@ -337,7 +350,11 @@ export class SportsParleyService {
             INSERT INTO transactions (user_id, transaction_type, currency, amount, description, status)
             VALUES ($1, 'win', 'SC', $2, $3, 'completed')
           `,
-            [parlay.user_id, parlay.potential_payout, `Sports parlay win ${parlay.parlay_id}`],
+            [
+              parlay.user_id,
+              parlay.potential_payout,
+              `Sports parlay win ${parlay.parlay_id}`,
+            ],
           );
         }
       }
