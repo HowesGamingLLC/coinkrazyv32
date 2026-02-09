@@ -148,7 +148,7 @@ export class SportsParleyService {
       RETURNING *
     `;
 
-    const result = await this.pool.query(query, [
+    const result = await databaseService.query(query, [
       parlay_id,
       userId,
       totalWager,
