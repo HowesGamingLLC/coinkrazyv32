@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import databaseService from "./database";
 
 export interface PokerTable {
   tableId: string;
