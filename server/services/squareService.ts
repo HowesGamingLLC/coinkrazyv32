@@ -154,7 +154,7 @@ class SquareService {
           pkg.bonusCoins,
           "square",
           "completed",
-          payment.id,
+          paymentId,
         ],
       );
 
