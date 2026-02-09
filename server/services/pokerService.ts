@@ -138,12 +138,12 @@ export class PokerService {
       VALUES ($1, $2, $3, 'under-the-gun', TRUE)
       RETURNING *
     `;
-    const playerResult = await this.pool.query(playerQuery, [tableId, userId, buyIn]);
+    const playerResult = await databaseService.query(playerQuery, [tableId, userId, buyIn]);
 
     // Deduct from user balance
-    await this.pool.query(
+    await databaseService.query(
       `
-      UPDATE user_balances 
+      UPDATE user_balances
       SET sweeps_coins = sweeps_coins - $2
       WHERE user_id = $1
     `,
@@ -151,7 +151,7 @@ export class PokerService {
     );
 
     // Log transaction
-    await this.pool.query(
+    await databaseService.query(
       `
       INSERT INTO transactions (user_id, transaction_type, currency, amount, description, status)
       VALUES ($1, 'bet', 'SC', $2, 'Poker table buy-in', 'completed')
@@ -166,21 +166,21 @@ export class PokerService {
   async leaveTable(tableId: string, userId: number, cashOut: number): Promise<boolean> {
     // Remove player from table
     const query = `
-      UPDATE poker_players 
+      UPDATE poker_players
       SET is_active = FALSE
       WHERE table_id = $1 AND user_id = $2
       RETURNING *
     `;
-    const result = await this.pool.query(query, [tableId, userId]);
+    const result = await databaseService.query(query, [tableId, userId]);
 
     if (!result.rows[0]) {
       throw new Error("Player not found at this table");
     }
 
     // Add cash out to player balance
-    await this.pool.query(
+    await databaseService.query(
       `
-      UPDATE user_balances 
+      UPDATE user_balances
       SET sweeps_coins = sweeps_coins + $2
       WHERE user_id = $1
     `,
@@ -188,7 +188,7 @@ export class PokerService {
     );
 
     // Log transaction
-    await this.pool.query(
+    await databaseService.query(
       `
       INSERT INTO transactions (user_id, transaction_type, currency, amount, description, status)
       VALUES ($1, 'win', 'SC', $2, 'Poker table cash out', 'completed')
@@ -212,7 +212,7 @@ export class PokerService {
       ORDER BY pt.created_at DESC
     `;
 
-    const result = await this.pool.query(query);
+    const result = await databaseService.query(query);
     return result.rows.map((row) => ({
       tableId: row.table_id,
       name: row.name,
@@ -239,7 +239,7 @@ export class PokerService {
       ORDER BY pp.position
     `;
 
-    const result = await this.pool.query(query, [tableId]);
+    const result = await databaseService.query(query, [tableId]);
     return result.rows.map((row) => ({
       playerId: row.user_id,
       tableId: row.table_id,
@@ -280,7 +280,7 @@ export class PokerService {
       RETURNING *
     `;
 
-    const result = await this.pool.query(query, [
+    const result = await databaseService.query(query, [
       handId,
       tableId,
       smallBlindAmount,
@@ -311,9 +311,9 @@ export class PokerService {
     const hand = handResult.rows[0];
 
     // Update hand status
-    await this.pool.query(
+    await databaseService.query(
       `
-      UPDATE poker_hands 
+      UPDATE poker_hands
       SET status = 'finished', winner_id = $2, winning_hand = $3
       WHERE hand_id = $1
     `,
@@ -322,9 +322,9 @@ export class PokerService {
 
     // Distribute pot to winner
     const pot = hand.pot;
-    await this.pool.query(
+    await databaseService.query(
       `
-      UPDATE user_balances 
+      UPDATE user_balances
       SET sweeps_coins = sweeps_coins + $2
       WHERE user_id = $1
     `,
@@ -332,7 +332,7 @@ export class PokerService {
     );
 
     // Log transaction
-    await this.pool.query(
+    await databaseService.query(
       `
       INSERT INTO transactions (user_id, transaction_type, currency, amount, description, status)
       VALUES ($1, 'win', 'SC', $2, $3, 'completed')
@@ -341,9 +341,9 @@ export class PokerService {
     );
 
     // Update player stats
-    await this.pool.query(
+    await databaseService.query(
       `
-      UPDATE poker_players 
+      UPDATE poker_players
       SET total_wins = total_wins + 1
       WHERE user_id = $1
     `,
@@ -364,7 +364,7 @@ export class PokerService {
       WHERE user_id = $1
     `;
 
-    const result = await this.pool.query(query, [userId]);
+    const result = await databaseService.query(query, [userId]);
     return result.rows[0];
   }
 
@@ -381,7 +381,7 @@ export class PokerService {
       FROM poker_tables LIMIT 1
     `;
 
-    const result = await this.pool.query(query);
+    const result = await databaseService.query(query);
     return result.rows[0];
   }
 
