@@ -25,13 +25,23 @@ interface ParlayLeg {
 
 const SportsBetting = () => {
   const [events, setEvents] = useState<SportsEvent[]>([]);
-  const [selectedSport, setSelectedSport] = useState<"nfl" | "nba" | "mlb" | "nhl" | "ncaa">("nfl");
+  const [selectedSport, setSelectedSport] = useState<
+    "nfl" | "nba" | "mlb" | "nhl" | "ncaa"
+  >("nfl");
   const [parlay, setParlay] = useState<ParlayLeg[]>([]);
   const [totalWager, setTotalWager] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"events" | "parlay" | "history">("events");
+  const [activeTab, setActiveTab] = useState<"events" | "parlay" | "history">(
+    "events",
+  );
 
-  const sportEmojis = { nfl: "🏈", nba: "🏀", mlb: "⚾", nhl: "🏒", ncaa: "🎓" };
+  const sportEmojis = {
+    nfl: "🏈",
+    nba: "🏀",
+    mlb: "⚾",
+    nhl: "🏒",
+    ncaa: "🎓",
+  };
   const sportNames = {
     nfl: "NFL",
     nba: "NBA",
@@ -57,7 +67,12 @@ const SportsBetting = () => {
     }
   };
 
-  const addLegToParlay = (event: SportsEvent, pick: "home" | "away" | "over" | "under", betType: "spread" | "moneyline" | "over_under", odds: number) => {
+  const addLegToParlay = (
+    event: SportsEvent,
+    pick: "home" | "away" | "over" | "under",
+    betType: "spread" | "moneyline" | "over_under",
+    odds: number,
+  ) => {
     if (parlay.some((leg) => leg.eventId === event.eventId)) {
       alert("This event is already in your parlay");
       return;
@@ -192,9 +207,13 @@ const SportsBetting = () => {
                 onClick={() => setSelectedSport(sport)}
                 style={{
                   padding: "1rem",
-                  backgroundColor: selectedSport === sport ? "#ffd700" : "#21262d",
+                  backgroundColor:
+                    selectedSport === sport ? "#ffd700" : "#21262d",
                   color: selectedSport === sport ? "#000" : "#f0f6fc",
-                  border: selectedSport === sport ? "2px solid #ffd700" : "1px solid #30363d",
+                  border:
+                    selectedSport === sport
+                      ? "2px solid #ffd700"
+                      : "1px solid #30363d",
                   borderRadius: "0.5rem",
                   cursor: "pointer",
                   fontSize: "1rem",
@@ -218,9 +237,13 @@ const SportsBetting = () => {
           </h2>
 
           {loading ? (
-            <p style={{ textAlign: "center", color: "#8b949e" }}>Loading events...</p>
+            <p style={{ textAlign: "center", color: "#8b949e" }}>
+              Loading events...
+            </p>
           ) : events.length === 0 ? (
-            <p style={{ textAlign: "center", color: "#8b949e" }}>No events available for this sport</p>
+            <p style={{ textAlign: "center", color: "#8b949e" }}>
+              No events available for this sport
+            </p>
           ) : (
             <div style={{ display: "grid", gap: "1.5rem" }}>
               {events.map((event) => (
@@ -244,9 +267,17 @@ const SportsBetting = () => {
                   >
                     {/* Home Team */}
                     <div>
-                      <h3 style={{ color: "#f0f6fc", marginBottom: "0.5rem" }}>{event.homeTeam}</h3>
+                      <h3 style={{ color: "#f0f6fc", marginBottom: "0.5rem" }}>
+                        {event.homeTeam}
+                      </h3>
                       {event.status === "in-progress" && (
-                        <p style={{ color: "#00d966", fontSize: "1.5rem", fontWeight: "bold" }}>
+                        <p
+                          style={{
+                            color: "#00d966",
+                            fontSize: "1.5rem",
+                            fontWeight: "bold",
+                          }}
+                        >
                           {event.homeScore}
                         </p>
                       )}
@@ -254,12 +285,19 @@ const SportsBetting = () => {
 
                     {/* Score/Time */}
                     <div style={{ textAlign: "center" }}>
-                      <p style={{ color: "#8b949e", fontSize: "0.875rem", marginBottom: "0.5rem" }}>
+                      <p
+                        style={{
+                          color: "#8b949e",
+                          fontSize: "0.875rem",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
                         {event.status === "scheduled" && "Upcoming"}
                         {event.status === "in-progress" && "LIVE"}
                         {event.status === "completed" && "Final"}
                       </p>
-                      {event.status === "in-progress" || event.status === "completed" ? (
+                      {event.status === "in-progress" ||
+                      event.status === "completed" ? (
                         <p style={{ color: "#ffd700", fontSize: "0.875rem" }}>
                           {event.homeScore} - {event.awayScore}
                         </p>
@@ -272,9 +310,17 @@ const SportsBetting = () => {
 
                     {/* Away Team */}
                     <div style={{ textAlign: "right" }}>
-                      <h3 style={{ color: "#f0f6fc", marginBottom: "0.5rem" }}>{event.awayTeam}</h3>
+                      <h3 style={{ color: "#f0f6fc", marginBottom: "0.5rem" }}>
+                        {event.awayTeam}
+                      </h3>
                       {event.status === "in-progress" && (
-                        <p style={{ color: "#00d966", fontSize: "1.5rem", fontWeight: "bold" }}>
+                        <p
+                          style={{
+                            color: "#00d966",
+                            fontSize: "1.5rem",
+                            fontWeight: "bold",
+                          }}
+                        >
                           {event.awayScore}
                         </p>
                       )}
@@ -287,7 +333,10 @@ const SportsBetting = () => {
                         backgroundColor: "#21262d",
                         borderRadius: "0.375rem",
                         textAlign: "center",
-                        color: event.status === "in-progress" ? "#ff4444" : "#8b949e",
+                        color:
+                          event.status === "in-progress"
+                            ? "#ff4444"
+                            : "#8b949e",
                         fontSize: "0.75rem",
                         fontWeight: "bold",
                       }}
@@ -302,7 +351,8 @@ const SportsBetting = () => {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+                      gridTemplateColumns:
+                        "repeat(auto-fit, minmax(150px, 1fr))",
                       gap: "1rem",
                     }}
                   >
@@ -326,11 +376,12 @@ const SportsBetting = () => {
                         fontSize: "0.875rem",
                       }}
                     >
-                      <div style={{ fontWeight: "bold" }}>
-                        {event.homeTeam}
-                      </div>
+                      <div style={{ fontWeight: "bold" }}>{event.homeTeam}</div>
                       <div style={{ color: "#8b949e", fontSize: "0.75rem" }}>
-                        {event.moneylineHome ? (event.moneylineHome > 0 ? "+" : "") + event.moneylineHome : "-"}
+                        {event.moneylineHome
+                          ? (event.moneylineHome > 0 ? "+" : "") +
+                            event.moneylineHome
+                          : "-"}
                       </div>
                     </button>
 
@@ -354,8 +405,11 @@ const SportsBetting = () => {
                           <div style={{ fontWeight: "bold" }}>
                             {event.homeTeam}
                           </div>
-                          <div style={{ color: "#8b949e", fontSize: "0.75rem" }}>
-                            {event.spread > 0 ? "-" : "+"}{Math.abs(event.spread)}
+                          <div
+                            style={{ color: "#8b949e", fontSize: "0.75rem" }}
+                          >
+                            {event.spread > 0 ? "-" : "+"}
+                            {Math.abs(event.spread)}
                           </div>
                         </button>
                         <button
@@ -375,8 +429,11 @@ const SportsBetting = () => {
                           <div style={{ fontWeight: "bold" }}>
                             {event.awayTeam}
                           </div>
-                          <div style={{ color: "#8b949e", fontSize: "0.75rem" }}>
-                            {event.spread > 0 ? "+" : "-"}{Math.abs(event.spread)}
+                          <div
+                            style={{ color: "#8b949e", fontSize: "0.75rem" }}
+                          >
+                            {event.spread > 0 ? "+" : "-"}
+                            {Math.abs(event.spread)}
                           </div>
                         </button>
                       </>
@@ -400,7 +457,9 @@ const SportsBetting = () => {
                           }}
                         >
                           <div style={{ fontWeight: "bold" }}>Over</div>
-                          <div style={{ color: "#8b949e", fontSize: "0.75rem" }}>
+                          <div
+                            style={{ color: "#8b949e", fontSize: "0.75rem" }}
+                          >
                             {event.overUnder}
                           </div>
                         </button>
@@ -419,7 +478,9 @@ const SportsBetting = () => {
                           }}
                         >
                           <div style={{ fontWeight: "bold" }}>Under</div>
-                          <div style={{ color: "#8b949e", fontSize: "0.75rem" }}>
+                          <div
+                            style={{ color: "#8b949e", fontSize: "0.75rem" }}
+                          >
                             {event.overUnder}
                           </div>
                         </button>
@@ -446,11 +507,12 @@ const SportsBetting = () => {
                         fontSize: "0.875rem",
                       }}
                     >
-                      <div style={{ fontWeight: "bold" }}>
-                        {event.awayTeam}
-                      </div>
+                      <div style={{ fontWeight: "bold" }}>{event.awayTeam}</div>
                       <div style={{ color: "#8b949e", fontSize: "0.75rem" }}>
-                        {event.moneylineAway ? (event.moneylineAway > 0 ? "+" : "") + event.moneylineAway : "-"}
+                        {event.moneylineAway
+                          ? (event.moneylineAway > 0 ? "+" : "") +
+                            event.moneylineAway
+                          : "-"}
                       </div>
                     </button>
                   </div>
@@ -464,7 +526,13 @@ const SportsBetting = () => {
       {/* Parlay Tab */}
       {activeTab === "parlay" && (
         <div>
-          <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem", color: "#ffd700" }}>
+          <h2
+            style={{
+              fontSize: "1.5rem",
+              marginBottom: "1.5rem",
+              color: "#ffd700",
+            }}
+          >
             Build Your Parlay
           </h2>
 
@@ -499,13 +567,24 @@ const SportsBetting = () => {
                     }}
                   >
                     <div>
-                      <p style={{ color: "#ffd700", fontWeight: "bold", marginBottom: "0.25rem" }}>
-                        {leg.pick === "home" ? event?.homeTeam : leg.pick === "away" ? event?.awayTeam : `${leg.pick.toUpperCase()}`}
+                      <p
+                        style={{
+                          color: "#ffd700",
+                          fontWeight: "bold",
+                          marginBottom: "0.25rem",
+                        }}
+                      >
+                        {leg.pick === "home"
+                          ? event?.homeTeam
+                          : leg.pick === "away"
+                            ? event?.awayTeam
+                            : `${leg.pick.toUpperCase()}`}
                       </p>
                       <p style={{ color: "#8b949e", fontSize: "0.875rem" }}>
                         {leg.betType === "moneyline" && "Moneyline"}
                         {leg.betType === "spread" && "Spread"}
-                        {leg.betType === "over_under" && "Over/Under"} @ {leg.odds}
+                        {leg.betType === "over_under" && "Over/Under"} @{" "}
+                        {leg.odds}
                       </p>
                     </div>
                     <button
@@ -537,7 +616,9 @@ const SportsBetting = () => {
               borderRadius: "0.75rem",
             }}
           >
-            <h3 style={{ color: "#ffd700", marginBottom: "1rem" }}>Place Bet</h3>
+            <h3 style={{ color: "#ffd700", marginBottom: "1rem" }}>
+              Place Bet
+            </h3>
 
             <div style={{ marginBottom: "1rem" }}>
               <label
@@ -617,13 +698,17 @@ const SportsBetting = () => {
               style={{
                 width: "100%",
                 padding: "1rem",
-                backgroundColor: parlay.length === 0 || totalWager === 0 ? "#666" : "#00d966",
+                backgroundColor:
+                  parlay.length === 0 || totalWager === 0 ? "#666" : "#00d966",
                 color: "#000",
                 border: "none",
                 borderRadius: "0.5rem",
                 fontSize: "1.125rem",
                 fontWeight: "bold",
-                cursor: parlay.length === 0 || totalWager === 0 ? "not-allowed" : "pointer",
+                cursor:
+                  parlay.length === 0 || totalWager === 0
+                    ? "not-allowed"
+                    : "pointer",
               }}
             >
               Place Parlay Bet
@@ -635,7 +720,13 @@ const SportsBetting = () => {
       {/* History Tab */}
       {activeTab === "history" && (
         <div>
-          <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem", color: "#ffd700" }}>
+          <h2
+            style={{
+              fontSize: "1.5rem",
+              marginBottom: "1.5rem",
+              color: "#ffd700",
+            }}
+          >
             Your Betting History
           </h2>
           <div
