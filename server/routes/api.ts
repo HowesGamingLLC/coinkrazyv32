@@ -872,7 +872,7 @@ router.get("/user/profile", async (req, res) => {
 
     const user = await databaseService.query(
       "SELECT id, email, username, first_name, last_name, role, status, kyc_status, is_email_verified, vip_expires_at, created_at FROM users WHERE id = $1",
-      [parseInt(userId as string)]
+      [parseInt(userId as string)],
     );
 
     if (!user.rows.length) {
@@ -917,7 +917,9 @@ router.get("/user/balance", async (req, res) => {
       });
     }
 
-    const balance = await databaseService.getUserBalance(parseInt(userId as string));
+    const balance = await databaseService.getUserBalance(
+      parseInt(userId as string),
+    );
 
     if (!balance) {
       return res.status(404).json({
@@ -967,7 +969,7 @@ router.get("/user/transactions", async (req, res) => {
 
     const result = await databaseService.query(
       "SELECT * FROM transactions WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2",
-      [parseInt(userId as string), limit]
+      [parseInt(userId as string), limit],
     );
 
     res.json({

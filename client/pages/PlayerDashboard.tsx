@@ -76,18 +76,24 @@ export const PlayerDashboard = () => {
       }
 
       // Fetch balance
-      const balanceResponse = await fetch(`/api/user/balance?userId=${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const balanceResponse = await fetch(
+        `/api/user/balance?userId=${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (balanceResponse.ok) {
         const data = await balanceResponse.json();
         setBalance(data.balance);
       }
 
       // Fetch transactions
-      const transResponse = await fetch(`/api/user/transactions?userId=${userId}&limit=50`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const transResponse = await fetch(
+        `/api/user/transactions?userId=${userId}&limit=50`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (transResponse.ok) {
         const transData = await transResponse.json();
         setTransactions(transData.transactions || []);
