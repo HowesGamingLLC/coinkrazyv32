@@ -264,7 +264,7 @@ export class SweepstakesService {
         COUNT(CASE WHEN privacy_accepted THEN 1 END) as privacy_accepted_users
       FROM sweepstakes_compliance
     `;
-    const result = await this.pool.query(query);
+    const result = await databaseService.query(query);
     return result.rows[0];
   }
 
