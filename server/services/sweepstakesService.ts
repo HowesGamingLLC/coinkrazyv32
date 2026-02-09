@@ -124,7 +124,7 @@ export class SweepstakesService {
       INSERT INTO compliance_logs (user_id, check_type, age, state, is_eligible, reason, checked_at)
       VALUES ($1, 'eligibility', $2, $3, $4, $5, CURRENT_TIMESTAMP)
     `;
-    await this.pool.query(query, [userId, age, state, isEligible, reason]);
+    await databaseService.query(query, [userId, age, state, isEligible, reason]);
   }
 
   // Get contest rules and terms
