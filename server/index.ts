@@ -68,5 +68,14 @@ export function createServer() {
   // Bonus features routes (leaderboards, VIP, tournaments, affiliates, social)
   app.use("/api/bonus", bonusFeatureRoutes);
 
+  // Poker room routes
+  app.use("/api/poker", pokerRoutes);
+
+  // Sports parlay routes
+  app.use("/api/sports", sportsRoutes);
+
+  // Sweepstakes compliance routes
+  app.use("/api/sweepstakes", sweepstakesRoutes);
+
   return app;
 }
